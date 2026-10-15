@@ -14,16 +14,84 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      accommodations: {
+        Row: {
+          id: string
+          rent: number
+          sort_order: number
+          title: string
+        }
+        Insert: {
+          id: string
+          rent: number
+          sort_order: number
+          title: string
+        }
+        Update: {
+          id?: string
+          rent?: number
+          sort_order?: number
+          title?: string
+        }
+        Relationships: []
+      }
+      mess_menu: {
+        Row: {
+          day: string
+          id: string
+          items: string
+          meal: string
+          sort_order: number
+        }
+        Insert: {
+          day: string
+          id: string
+          items: string
+          meal: string
+          sort_order: number
+        }
+        Update: {
+          day?: string
+          id?: string
+          items?: string
+          meal?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "owner"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +218,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["owner"],
+    },
   },
 } as const
