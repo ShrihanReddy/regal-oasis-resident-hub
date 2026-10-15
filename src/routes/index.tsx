@@ -1,7 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { ArrowDown, ArrowUpRight, Crown } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, Crown, Wifi, Utensils, ArrowRight } from 'lucide-react';
 import { SiteHeader, type Role } from '@/components/site-header';
+import { Button } from '@/components/ui/button';
+import { GuestSections } from '@/components/guest-sections';
+import { OwnerPanel } from '@/components/owner-panel';
+import { useAuth } from '@/components/auth-context';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { guestQueryOptions } from '@/lib/guest.functions';
 import residence from '@/assets/residence.jpg';
 
 export const Route = createFileRoute('/')({
@@ -13,6 +19,7 @@ export const Route = createFileRoute('/')({
     { property: 'og:type', content: 'website' },
     { name: 'twitter:card', content: 'summary_large_image' },
   ] }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(guestQueryOptions),
   component: Index,
 });
 
@@ -23,11 +30,14 @@ const viewContent = {
 };
 
 function Index() {
+  useSuspenseQuery(guestQueryOptions);
+  const { user } = useAuth();
   const [role, setRole] = useState<Role>('guest');
   const [dark, setDark] = useState(true);
   useEffect(() => {
     try { setDark(localStorage.getItem('regal-theme') !== 'light'); } catch { /* Theme remains available without storage. */ }
   }, []);
+  useEffect(() => { if (user) setRole('owner'); }, [user?.id]);
   useEffect(() => { document.documentElement.classList.toggle('dark', dark); }, [dark]);
   function toggleTheme() {
     const next = !dark;
@@ -38,6 +48,7 @@ function Index() {
   return <div className="site-shell">
     <SiteHeader role={role} onRoleChange={setRole} dark={dark} onThemeChange={toggleTheme} />
     <main>
+      {role === 'owner' ? <OwnerPanel /> : <>
       <section className="welcome-hero" aria-label={role === 'guest' ? 'Welcome to The Regal Oasis' : content.label}>
         <img className="hero-image" src={residence} alt="Illustrative vision of a leafy residence courtyard" width={1920} height={1024} />
         <div className="hero-shade" />
@@ -45,15 +56,20 @@ function Index() {
           <div className="hero-eyebrow"><span className="eyebrow-line" />{content.eyebrow}</div>
           <h1>{content.heading}</h1>
           <p className="hero-description">{content.description}</p>
+          {role === 'guest' && <>
+            <div className="hero-highlights"><span><span className="status-dot" />Admissions Open</span><span><Wifi size={15} />High-Speed Fiber</span><span><Utensils size={15} />3 Meals Included</span></div>
+            <div className="hero-ctas"><Button asChild variant="hero"><a href="#accommodation">Explore accommodation<ArrowRight /></a></Button><Button asChild variant="heroOutline"><a href="#mess-menu">View mess menu<Utensils /></a></Button></div>
+          </>}
           <div className="hero-caption"><span className="caption-line" /><span>MORE THAN A STAY.<br /><strong>A SENSE OF BELONGING.</strong></span></div>
         </div>
-        <div className="hero-bottom"><span><span className="mini-dot" /> STUDENT LIVING, REIMAGINED</span><span className="photo-note">A vision of your oasis</span><a href="#welcome" className="scroll-link" aria-label="Scroll to welcome"><ArrowDown size={18} /></a></div>
+        <div className="hero-bottom"><span><span className="mini-dot" /> STUDENT LIVING, REIMAGINED</span><span className="photo-note">A vision of your oasis</span><a href={role === 'guest' ? '#accommodation' : '#welcome'} className="scroll-link" aria-label="Scroll to welcome"><ArrowDown size={18} /></a></div>
         <span className="hero-side-label">LIVE WELL. BELONG HERE.</span>
       </section>
-      <section id="welcome" className="welcome-strip" aria-live="polite">
+      {role === 'guest' ? <GuestSections /> : <section id="welcome" className="welcome-strip" aria-live="polite">
         <div className="welcome-strip-title"><span className="section-index">01 /</span><div><p className="small-label">THE REGAL WAY</p><h2>{content.label}</h2></div></div>
         <div className="welcome-strip-copy"><p>{content.subline}</p><ArrowUpRight size={24} strokeWidth={1.2} aria-hidden="true" /></div>
-      </section>
+      </section>}
+      </>}
     </main>
     <footer className="site-footer"><span><Crown size={14} /> THE REGAL OASIS</span><span>A little more than home.</span></footer>
   </div>;
