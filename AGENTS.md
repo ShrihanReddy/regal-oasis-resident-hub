@@ -16,3 +16,7 @@
 
 - Store tariffs and meals in Cloud tables with public SELECT and owner-only UPDATE; use a protected roles table plus verified identity for ownership, never client-side role claims.
 - Use the single root AuthProvider for identity updates and cache invalidation; public owner sign-in surfaces must never load private information without server authorization.
+- Protect resident self-service with an encrypted server-verified shared-code session; this gate grants no individual identity or owner privileges.
+- Keep maintenance reads public and poll the shared query; resident writes require the server gate, while status changes require verified ownership.
+- Store rent images privately and student allotments separately; expose only active student selection behind the resident gate, with owner-only proof review.
+- Anonymous feedback rows contain only message, random ID, and timestamp; never persist student or session identifiers with feedback.
