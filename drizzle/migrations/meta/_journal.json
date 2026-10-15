@@ -15,6 +15,13 @@
       "when": 1792086302455,
       "tag": "0001_tighten_owner_function_grants",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792086577329,
+      "tag": "0002_resident_self_service",
+      "breakpoints": true
     }
   ]
 }

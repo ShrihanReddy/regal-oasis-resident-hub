@@ -35,6 +35,51 @@ export type Database = {
         }
         Relationships: []
       }
+      anonymous_feedback: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+        }
+        Relationships: []
+      }
+      maintenance_tickets: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          id: string
+          room_number: string
+          status: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description: string
+          id?: string
+          room_number: string
+          status?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          room_number?: string
+          status?: string
+        }
+        Relationships: []
+      }
       mess_menu: {
         Row: {
           day: string
@@ -56,6 +101,65 @@ export type Database = {
           items?: string
           meal?: string
           sort_order?: number
+        }
+        Relationships: []
+      }
+      rent_proofs: {
+        Row: {
+          allotment_id: string
+          created_at: string
+          file_path: string
+          id: string
+          payment_method: string
+          utr: string
+        }
+        Insert: {
+          allotment_id: string
+          created_at?: string
+          file_path: string
+          id?: string
+          payment_method: string
+          utr?: string
+        }
+        Update: {
+          allotment_id?: string
+          created_at?: string
+          file_path?: string
+          id?: string
+          payment_method?: string
+          utr?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rent_proofs_allotment_id_fkey"
+            columns: ["allotment_id"]
+            isOneToOne: false
+            referencedRelation: "student_allotments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_allotments: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          room_number: string
+          student_name: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          room_number: string
+          student_name: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          room_number?: string
+          student_name?: string
         }
         Relationships: []
       }
