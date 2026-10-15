@@ -8,6 +8,13 @@
       "when": 1792085989618,
       "tag": "0000_guest_tariffs_menu_owner_access",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792086302455,
+      "tag": "0001_tighten_owner_function_grants",
+      "breakpoints": true
     }
   ]
 }
