@@ -80,6 +80,12 @@ export type Database = {
         }
         Relationships: []
       }
+      weekly_mess_menu: {
+        Row: { id: string; week_number: number; day: string; meal: string; items: string; sort_order: number }
+        Insert: { id: string; week_number: number; day: string; meal: string; items?: string; sort_order: number }
+        Update: { id?: string; week_number?: number; day?: string; meal?: string; items?: string; sort_order?: number }
+        Relationships: []
+      }
       mess_menu: {
         Row: {
           day: string

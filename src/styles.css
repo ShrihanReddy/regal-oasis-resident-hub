@@ -243,3 +243,18 @@ h2 { font-size: 23px; font-weight: 450; margin: 0; }
  .owner-auth h1 { font-size: 29px; }
  .edit-actions { flex-wrap: wrap; }
 }
+
+/* Four-week rotating guest menu; the table scrolls horizontally on small screens. */
+.weekly-menu-scroll { width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; background: var(--background); }
+.weekly-menu-table { width: 100%; min-width: 760px; table-layout: fixed; border-collapse: collapse; font-size: 12px; }
+.weekly-menu-table th, .weekly-menu-table td { border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); padding: 17px 14px; vertical-align: top; text-align: left; overflow-wrap: anywhere; }
+.weekly-menu-table tr:last-child th, .weekly-menu-table tr:last-child td { border-bottom: none; }
+.weekly-menu-table th:last-child, .weekly-menu-table td:last-child { border-right: none; }
+.weekly-menu-table thead th { color: var(--gold); font-size: 12px; font-weight: 600; background: var(--secondary); }
+.weekly-menu-table tbody th { width: 115px; font-weight: 600; color: var(--foreground); }
+.weekly-menu-table td { color: var(--muted-foreground); line-height: 1.7; white-space: pre-line; }
+.weekly-meal-cell { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.weekly-meal-cell button { color: var(--gold); padding: 0 5px; height: 25px; }
+.weekly-meal-form textarea { font-size: 12px; min-height: 90px; }
+.weekly-meal-form .edit-actions { flex-wrap: wrap; }
+@media (max-width: 600px) { .menu-toolbar { flex-direction: column; align-items: flex-start; } .day-tabs { width: 100%; } .day-tabs > button { flex: 1; min-width: 0; padding-inline: 5px; } }

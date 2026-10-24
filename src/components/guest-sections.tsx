@@ -1,14 +1,13 @@
 import { useState, type FormEvent } from 'react';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useServerFn } from '@tanstack/react-start';
-import { BedDouble, Wind, Users, Coffee, Utensils, Cookie, Moon, Sparkles, Pencil, Save, X, Check, ArrowDown } from 'lucide-react';
+import { BedDouble, Wind, Users, Utensils, Pencil, Save, X, Check, ArrowDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { days, mealsForDay, type Day } from '@/lib/guest-schema';
+import { weeks, fullDays, mealNames, mealsForWeek, type Week } from '@/lib/guest-schema';
 import { guestQueryOptions, updateRent, updateMeal } from '@/lib/guest.functions';
 import type { Tables } from '@/integrations/supabase/types';
-const mealIcons = { Breakfast: Coffee, Lunch: Utensils, 'Evening Snacks': Cookie, Dinner: Moon };
 
 function RentCard({ room, editable }: { room: Tables<'accommodations'>; editable: boolean }) {
   const [editing, setEditing] = useState(false);
@@ -33,35 +32,67 @@ function RentCard({ room, editable }: { room: Tables<'accommodations'>; editable
     {message && <p className="form-message" role="status">{message}</p>}
   </article>;
 }
-function MealCard({ meal, editable }: { meal: Tables<'mess_menu'>; editable: boolean }) {
-  const [editing, setEditing] = useState(false);
-  const [items, setItems] = useState(meal.items);
-  const [message, setMessage] = useState('');
+function WeeklyMenu({ menu, editable }: { menu: Tables<'weekly_mess_menu'>[]; editable: boolean }) {
+  const [week, setWeek] = useState<Week>(1);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [draft, setDraft] = useState('');
   const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState('');
   const save = useServerFn(updateMeal);
   const queryClient = useQueryClient();
-  const Icon = mealIcons[meal.meal as keyof typeof mealIcons] ?? Utensils;
-  async function submit(e: FormEvent) {
+  const weeklyMeals = mealsForWeek(menu, week);
+  async function submit(e: FormEvent, id: string) {
     e.preventDefault(); setBusy(true); setMessage('');
-    try { await save({ data: { id: meal.id, items } }); await queryClient.invalidateQueries({ queryKey: guestQueryOptions.queryKey }); setEditing(false); setMessage('Menu saved'); }
-    catch (error) { setMessage(error instanceof Error ? error.message : 'Could not save menu.'); }
+    try {
+      await save({ data: { id, items: draft.trim() || 'Menu to be announced' } });
+      await queryClient.invalidateQueries({ queryKey: guestQueryOptions.queryKey });
+      setEditingId(null); setMessage('Menu updated successfully.');
+    } catch(error) { setMessage(error instanceof Error ? error.message : 'Could not update menu.'); }
     finally { setBusy(false); }
   }
-  return <article className="meal-card"><div className="meal-top"><Icon size={21} strokeWidth={1.5} /><span className="meal-number">0{meal.sort_order}</span></div><h3>{meal.meal}</h3>
-    {editing ? <form onSubmit={submit}><label htmlFor={`meal-${meal.id}`}>Meal items</label><Textarea id={`meal-${meal.id}`} value={items} onChange={e => setItems(e.target.value)} maxLength={1000} required /><div className="edit-actions"><Button type="submit" disabled={busy}><Save />{busy ? 'Saving…' : 'Save menu'}</Button><Button variant="ghost" size="icon" aria-label="Cancel menu edit" disabled={busy} onClick={() => setEditing(false)}><X /></Button></div></form> : <p className="meal-items">{meal.items}</p>}
-    {editable && !editing && <Button variant="ghost" className="edit-meal" onClick={() => { setItems(meal.items); setEditing(true); setMessage(''); }}><Pencil size={14} />Edit meal</Button>}
+  return <>
+    <div className="menu-toolbar">
+      <div className="day-tabs" role="tablist" aria-label="Menu week">
+        {weeks.map(w => <Button key={w} variant="ghost" role="tab" id={`week-tab-${w}`}
+          aria-controls="weekly-menu-panel" aria-selected={week === w} tabIndex={week === w ? 0 : -1}
+          onClick={() => { setWeek(w); setEditingId(null); setMessage(''); }}
+          onKeyDown={e => { if(e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return; e.preventDefault();
+            const next = weeks[(weeks.indexOf(week) + (e.key === 'ArrowRight' ? 1 : 3)) % 4]!;
+            setWeek(next); setEditingId(null); document.getElementById(`week-tab-${next}`)?.focus(); }}>
+          Week {w}
+        </Button>)}
+      </div>
+      <span className="day-caption">{editable ? 'Select any meal to edit it.' : 'Our rotating four-week meal plan.'}</span>
+    </div>
+    <div className="weekly-menu-scroll" id="weekly-menu-panel" role="tabpanel" aria-labelledby={`week-tab-${week}`}>
+      <table className="weekly-menu-table">
+        <thead><tr><th scope="col">Day</th>{mealNames.map(name => <th key={name} scope="col">{name}</th>)}</tr></thead>
+        <tbody>{fullDays.map(day => <tr key={day.id}><th scope="row">{day.label}</th>
+          {mealNames.map(name => {
+            const meal = weeklyMeals.find(item => item.day === day.id && item.meal === name);
+            if (!meal) return <td key={name}>—</td>;
+            return <td key={name}>
+              {editable && editingId === meal.id ?
+                <form className="weekly-meal-form" onSubmit={e => submit(e, meal.id)}>
+                  <label className="sr-only" htmlFor={`edit-${meal.id}`}>{day.label} {name}</label>
+                  <Textarea id={`edit-${meal.id}`} rows={3} maxLength={1000} value={draft} onChange={e => setDraft(e.target.value)} />
+                  <div className="edit-actions"><Button type="submit" size="sm" disabled={busy}><Save size={14}/>Save</Button><Button type="button" size="sm" variant="ghost" disabled={busy} onClick={() => setEditingId(null)}>Cancel</Button></div>
+                </form> : <div className="weekly-meal-cell"><span>{meal.items || 'Menu to be announced'}</span>
+                  {editable && <Button type="button" size="sm" variant="ghost" aria-label={`Edit ${day.label} ${name} week ${week}`} onClick={() => { setDraft(meal.items); setEditingId(meal.id); setMessage(''); }}><Pencil size={14}/></Button>}
+                </div>}
+            </td>;
+          })}</tr>)}</tbody>
+      </table>
+    </div>
     {message && <p className="form-message" role="status">{message}</p>}
-  </article>;
+  </>;
 }
 export function GuestSections({ editable = false }: { editable?: boolean }) {
   const { data } = useSuspenseQuery(guestQueryOptions);
-  const [day, setDay] = useState<Day>('mon');
-  const meals = mealsForDay(data.menu, day);
   return <>
     <section id="accommodation" className="guest-section accommodation-section"><div className="section-heading"><div><p className="small-label">01 / FIND YOUR SPACE</p><h2>{editable ? 'Accommodation tariffs' : 'A room for your next chapter.'}</h2></div><p>Three ways to make yourself at home.</p></div><div className="tariff-grid">{data.rooms.map(room => <RentCard key={room.id} room={room} editable={editable} />)}</div></section>
-    <section id="mess-menu" className="guest-section menu-section"><div className="section-heading"><div><p className="small-label">02 / FRESH FROM THE KITCHEN</p><h2>{editable ? 'Mess menu' : 'Good food. Every day.'}</h2></div><span className="menu-note"><Utensils size={14} />A little taste of home.</span></div>
-    <div className="menu-toolbar"><div className="day-tabs" role="tablist" aria-label="Mess menu day">{days.map(d => <Button variant="ghost" role="tab" id={`tab-${d.id}`} aria-controls="day-menu" aria-selected={day === d.id} key={d.id} onClick={() => setDay(d.id)} onKeyDown={e => { if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; e.preventDefault(); const i = days.findIndex(v => v.id === day); const next = days[(i + (e.key === 'ArrowRight' ? 1 : 2)) % 3]; if (!next) return; setDay(next.id); document.getElementById(`tab-${next.id}`)?.focus(); }} tabIndex={day === d.id ? 0 : -1}>{d.id === 'wed' && <Sparkles size={14} />}{d.label}</Button>)}</div><span className="day-caption">{day === 'wed' ? 'Something a little special.' : 'Made for your everyday.'}</span></div>
-    <div className="meal-grid" id="day-menu" role="tabpanel" aria-labelledby={`tab-${day}`} aria-live="polite">{meals.map(meal => <MealCard key={meal.id} meal={meal} editable={editable} />)}</div>
+    <section id="mess-menu" className="guest-section menu-section"><div className="section-heading"><div><p className="small-label">02 / FRESH FROM THE KITCHEN</p><h2>{editable ? 'Edit the four-week mess menu' : 'Good food. Every day.'}</h2></div><span className="menu-note"><Utensils size={14} />A little taste of home.</span></div>
+      <WeeklyMenu menu={data.menu} editable={editable}/>
     </section>
   </>;
 }
