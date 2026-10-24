@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { PropertyGallery } from './property-gallery';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useServerFn } from '@tanstack/react-start';
 import { BedDouble, Wind, Users, Utensils, Pencil, Save, X, Check, ArrowDown } from 'lucide-react';
@@ -94,5 +95,7 @@ export function GuestSections({ editable = false }: { editable?: boolean }) {
     <section id="mess-menu" className="guest-section menu-section"><div className="section-heading"><div><p className="small-label">02 / FRESH FROM THE KITCHEN</p><h2>{editable ? 'Edit the four-week mess menu' : 'Good food. Every day.'}</h2></div><span className="menu-note"><Utensils size={14} />A little taste of home.</span></div>
       <WeeklyMenu menu={data.menu} editable={editable}/>
     </section>
+    <PropertyGallery editable={editable} />
   </>;
-}
+  }
+

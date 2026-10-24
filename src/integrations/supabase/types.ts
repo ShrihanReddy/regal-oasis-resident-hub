@@ -14,6 +14,12 @@ export type Database = {
   }
   public: {
     Tables: {
+      property_gallery: {
+        Row: { id: string; storage_path: string; caption: string; sort_order: number; created_at: string }
+        Insert: { id?: string; storage_path: string; caption?: string; sort_order?: number; created_at?: string }
+        Update: { id?: string; storage_path?: string; caption?: string; sort_order?: number; created_at?: string }
+        Relationships: []
+      }
       accommodations: {
         Row: {
           id: string
