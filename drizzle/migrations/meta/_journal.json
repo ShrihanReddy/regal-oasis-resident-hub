@@ -71,6 +71,13 @@
       "when": 1792880006000,
       "tag": "0009_kitchen_inventory",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1792918824227,
+      "tag": "0010_protect_kitchen_stock_history",
+      "breakpoints": true
     }
   ]
 }

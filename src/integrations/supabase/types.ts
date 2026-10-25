@@ -89,6 +89,152 @@ export type Database = {
         }
         Relationships: []
       }
+      kitchen_preparations: {
+        Row: {
+          actor_id: string | null
+          created_at: string
+          id: string
+          prepared_on: string
+          quantity: number
+          recipe_id: string
+          recipe_name: string
+          reversed_at: string | null
+          unit: string
+        }
+        Insert: {
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          prepared_on?: string
+          quantity: number
+          recipe_id: string
+          recipe_name: string
+          reversed_at?: string | null
+          unit: string
+        }
+        Update: {
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          prepared_on?: string
+          quantity?: number
+          recipe_id?: string
+          recipe_name?: string
+          reversed_at?: string | null
+          unit?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kitchen_preparations_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "kitchen_recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kitchen_recipe_ingredients: {
+        Row: {
+          ingredient_id: string
+          quantity: number
+          recipe_id: string
+        }
+        Insert: {
+          ingredient_id: string
+          quantity: number
+          recipe_id: string
+        }
+        Update: {
+          ingredient_id?: string
+          quantity?: number
+          recipe_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kitchen_recipe_ingredients_ingredient_id_fkey"
+            columns: ["ingredient_id"]
+            isOneToOne: false
+            referencedRelation: "pantry_ingredients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kitchen_recipe_ingredients_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "kitchen_recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kitchen_recipes: {
+        Row: {
+          base_yield: number
+          created_at: string
+          id: string
+          name: string
+          yield_unit: string
+        }
+        Insert: {
+          base_yield: number
+          created_at?: string
+          id?: string
+          name: string
+          yield_unit: string
+        }
+        Update: {
+          base_yield?: number
+          created_at?: string
+          id?: string
+          name?: string
+          yield_unit?: string
+        }
+        Relationships: []
+      }
+      kitchen_stock_events: {
+        Row: {
+          actor_id: string | null
+          created_at: string
+          delta: number
+          id: string
+          ingredient_id: string
+          production_id: string | null
+          reason: string
+        }
+        Insert: {
+          actor_id?: string | null
+          created_at?: string
+          delta: number
+          id?: string
+          ingredient_id: string
+          production_id?: string | null
+          reason: string
+        }
+        Update: {
+          actor_id?: string | null
+          created_at?: string
+          delta?: number
+          id?: string
+          ingredient_id?: string
+          production_id?: string | null
+          reason?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kitchen_stock_event_preparation_fk"
+            columns: ["production_id"]
+            isOneToOne: false
+            referencedRelation: "kitchen_preparations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kitchen_stock_events_ingredient_id_fkey"
+            columns: ["ingredient_id"]
+            isOneToOne: false
+            referencedRelation: "pantry_ingredients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       maintenance_tickets: {
         Row: {
           category: string
@@ -137,6 +283,33 @@ export type Database = {
           items?: string
           meal?: string
           sort_order?: number
+        }
+        Relationships: []
+      }
+      pantry_ingredients: {
+        Row: {
+          created_at: string
+          id: string
+          low_stock: number
+          name: string
+          stock: number
+          unit: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          low_stock?: number
+          name: string
+          stock?: number
+          unit: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          low_stock?: number
+          name?: string
+          stock?: number
+          unit?: string
         }
         Relationships: []
       }
@@ -303,6 +476,18 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      kitchen_change_stock: {
+        Args: { p_delta: number; p_ingredient: string; p_reason: string }
+        Returns: undefined
+      }
+      kitchen_prepare: {
+        Args: { p_date?: string; p_quantity: number; p_recipe: string }
+        Returns: string
+      }
+      kitchen_reverse_preparation: {
+        Args: { p_preparation: string }
+        Returns: undefined
       }
     }
     Enums: {
