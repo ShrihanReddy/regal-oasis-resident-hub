@@ -349,3 +349,132 @@ html { scroll-behavior: smooth; }
 .resident-reply,.resident-code,.resident-notice{padding:1rem;border:1px solid var(--border);border-radius:.6rem;margin-top:1rem;overflow-wrap:anywhere;}
 .resident-code code{display:block;user-select:all;overflow-wrap:anywhere;padding:.75rem 0;}
 @media(max-width:750px){.resident-two{grid-template-columns:1fr;}.resident-card{padding:1rem;}}
+
+
+/* ================================================================
+   THE REGAL OASIS — QUIET LUXURY VISUAL REFRESH (October 2026)
+   Visual-only. Does not alter application behavior or data access.
+   Restrained dark stone, architectural lines, brass and photography.
+   ================================================================ */
+.dark {
+  --background: #0e1211;
+  --foreground: #f0eee7;
+  --primary: #d7b66b;
+  --primary-foreground: #171713;
+  --secondary: #161b19;
+  --accent: #252923;
+  --muted-foreground: #a7aaa2;
+  --border: #343a35;
+  --gold: #d2ae60;
+  --selected: #252922;
+  --selected-shadow: inset 0 0 0 1px rgba(217,180,101,.31);
+  --hero-overlay: linear-gradient(90deg,rgba(7,12,10,.9) 0%,rgba(7,12,10,.67) 28%,rgba(8,12,10,.20) 65%,rgba(8,12,10,.08) 100%);
+  --hero-floor: linear-gradient(0deg,rgba(7,11,10,.63),transparent 38%);
+  --hero-button-bg: #dbb86b;
+  --hero-button-ink: #181711;
+  --highlight-surface: rgba(11,16,14,.78);
+  --highlight-border: rgba(217,189,126,.23);
+}
+/* Gentle material depth; no photographic fakes, glow or looping motion. */
+.dark body {
+  background-color: #0e1211;
+  background-image:
+    radial-gradient(ellipse 72% 48% at 89% 13%,rgba(130,98,46,.095),transparent 70%),
+    radial-gradient(ellipse 62% 55% at 2% 58%,rgba(83,95,65,.08),transparent 72%),
+    repeating-linear-gradient(125deg,transparent 0,transparent 130px,rgba(226,191,117,.018) 131px,transparent 132px);
+  background-attachment: fixed;
+}
+.dark .site-shell { background: transparent; }
+.dark .site-header {
+  background: rgba(12,16,14,.96);
+  border-bottom: 1px solid rgba(205,171,100,.24);
+  box-shadow: 0 9px 32px rgba(0,0,0,.12);
+  backdrop-filter: blur(14px);
+}
+.dark .brand-mark { background: rgba(212,177,101,.035); border-color: rgba(214,178,104,.65); }
+.dark .brand-mark img { display:block; max-width:90%; max-height:90%; }
+.dark .brand-name { letter-spacing:2.3px; }
+.dark .role-switcher { background: #171c1a; border-color: #353a34; }
+.dark .role-tab[aria-pressed=true] { background: linear-gradient(110deg,rgba(205,170,92,.19),rgba(205,170,92,.065)); color:#f0d28e; box-shadow:inset 0 0 0 1px rgba(211,172,90,.62); }
+.dark .role-tab:not([aria-pressed=true]):hover { color:#eee5d4; background:rgba(255,255,255,.035); }
+.dark .theme-toggle { color:var(--gold); border-color:rgba(211,172,90,.45); }
+.dark .welcome-hero { border-bottom:1px solid rgba(211,172,90,.24); }
+.dark .hero-shade { background:var(--hero-overlay); }
+.dark .hero-highlights > span { background:rgba(11,16,14,.72); border-color:rgba(222,207,162,.21); border-radius:9px; backdrop-filter:blur(6px); }
+.dark .hero-highlights svg { color:#e0bb70; }
+.dark .hero-button { background:linear-gradient(120deg,#efce87,#cfaa5a); border:1px solid #d4b36c; color:#151712; border-radius:9px; box-shadow:none; font-weight:650; }
+.dark .hero-outline-button { background:rgba(9,14,12,.68); border:1px solid rgba(215,183,108,.54); border-radius:9px; }
+.dark .welcome-strip { background:linear-gradient(90deg,rgba(144,112,54,.095),rgba(19,24,20,.26) 42%,transparent); }
+.dark .guest-section { position:relative; background:transparent; }
+.dark .guest-section:nth-of-type(even) { background:rgba(17,22,19,.46); }
+.dark .section-heading h2, .dark .welcome-strip h2 { color:#f3eee3; font-weight:560; }
+.dark .tariff-card, .dark .meal-card,
+.dark .resident-card, .dark .kitchen-panel,
+.dark .kitchen-admin, .dark .homepage-heading-controls,
+.dark .gallery-upload {
+  background: linear-gradient(135deg,rgba(31,36,32,.96),rgba(17,23,20,.97));
+  border:1px solid rgba(194,184,159,.20);
+  border-radius:13px;
+  box-shadow:0 12px 35px rgba(0,0,0,.08);
+}
+.dark .tariff-card:hover, .dark .meal-card:hover { border-color:rgba(208,172,94,.44); }
+.dark .featured-tariff { border-color:rgba(211,177,101,.70); }
+.dark .menu-section { background:rgba(17,22,20,.67); }
+.dark .day-tabs, .dark .weekly-menu-scroll { background:#151a18; }
+.dark .day-tabs > button[aria-selected=true] { background:rgba(211,177,101,.18); color:#f2d58e; }
+.dark .weekly-menu-table thead th { background:#232821; }
+.dark .gallery-upload-label { background:#d9b66e; color:#171713; }
+.dark .property-photo-open { border:1px solid rgba(200,184,142,.23); border-radius:11px; }
+.dark .homepage-editor-preview { border:1px solid rgba(211,177,101,.27); }
+.dark .owner-heading {
+  position:relative;
+  background:linear-gradient(105deg,rgba(158,116,57,.14),rgba(19,24,21,.40) 47%,rgba(32,44,33,.04));
+  border-bottom:1px solid rgba(215,181,105,.10);
+}
+.dark .owner-heading h1 { font-weight:570; letter-spacing:-.035em; }
+.dark .owner-heading .small-label, .dark .guest-section .small-label { color:#c8ad78; }
+.dark .owner-quick-nav {
+  background:rgba(18,23,20,.94);
+  border:1px solid rgba(215,181,105,.22);
+  border-radius:14px;
+  box-shadow:0 12px 26px rgba(0,0,0,.10);
+  padding:12px;
+  gap:9px;
+  top:100px;
+  backdrop-filter:blur(12px);
+}
+.dark .owner-quick-nav a { border:1px solid #40473e; color:#dedfd7; padding:.62rem .9rem; border-radius:9px; font-size:12px; transition:border-color .15s, background .15s; }
+.dark .owner-quick-nav a:hover, .dark .owner-quick-nav a:focus-visible { background:rgba(205,169,89,.13); border-color:#bda05e; color:#efd18b; }
+.dark .owner-anchor { scroll-margin-top:186px; }
+.dark .resident-portal { background:
+  radial-gradient(ellipse 60% 28% at 93% 4%,rgba(159,122,61,.11),transparent 75%),
+  linear-gradient(135deg,rgba(25,33,27,.28),transparent 65%) !important;
+}
+.dark .resident-tabs button { background:#d8b56b; color:#161713; border-color:#d8b56b; font-weight:650; }
+.dark .resident-tabs button[aria-pressed=false] { background:rgba(21,27,23,.86); border-color:#40473e; color:#e4e4dc; font-weight:500; }
+.dark .resident-tabs button[aria-pressed=false]:hover { border-color:#bca05f; color:#f4d58f; }
+.dark .resident-card button { background:#d9b66c; color:#151712; border-color:#d9b66c; font-weight:650; }
+.dark .resident-card button:hover:not(:disabled) { background:#edca7e; }
+.dark .resident-card button:disabled { opacity:.52; }
+.dark .resident-ticket { border-color:rgba(200,188,160,.17); }
+.dark .resident-ticket-top strong, .dark .resident-reply strong { color:#e2bf73; }
+.dark .resident-reply,.dark .resident-code,.dark .resident-notice { background:rgba(216,183,109,.055); border-color:rgba(216,183,109,.24); }
+.dark .resident-field input, .dark .resident-field select, .dark .resident-field textarea,
+.dark .kitchen-admin input,.dark .kitchen-admin select {
+  background:#121816;
+  border:1px solid #424940;
+  color:#f0eee7;
+  border-radius:8px;
+}
+.dark input:focus-visible,.dark select:focus-visible,.dark textarea:focus-visible,.dark button:focus-visible,.dark a:focus-visible { outline:2px solid #d9b76e; outline-offset:2px; }
+.dark .kitchen-admin button { color:#e5c483; border-color:rgba(213,181,105,.46); }
+.dark .kitchen-admin button:hover:not(:disabled) { background:rgba(215,181,105,.13); }
+.dark .site-footer { border-top:1px solid rgba(215,181,105,.17); background:rgba(13,17,15,.65); }
+@media(max-width:1000px) { .dark .owner-quick-nav { top:140px; } .dark .owner-anchor { scroll-margin-top:205px; } }
+@media(max-width:600px) {
+  .dark .site-header { backdrop-filter:none; }
+  .dark .owner-quick-nav { top:0; }
+  .dark .owner-anchor { scroll-margin-top:95px; }
+  .dark .resident-portal { padding-block:2.5rem; }
+  .dark .resident-card { border-radius:11px; }
+}
