@@ -124,6 +124,10 @@ export type Database = {
       }
       rent_proofs: {
         Row: {
+          billing_month: string
+          review_status: string
+          reviewed_at: string | null
+          reviewed_by: string | null
           allotment_id: string
           created_at: string
           file_path: string
@@ -132,6 +136,10 @@ export type Database = {
           utr: string
         }
         Insert: {
+          billing_month?: string
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           allotment_id: string
           created_at?: string
           file_path: string
@@ -140,6 +148,10 @@ export type Database = {
           utr?: string
         }
         Update: {
+          billing_month?: string
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           allotment_id?: string
           created_at?: string
           file_path?: string
@@ -159,6 +171,8 @@ export type Database = {
       }
       student_allotments: {
         Row: {
+          phone_number: string
+          monthly_rent: number | null
           sharing_type: number | null
           has_ac: boolean
           active: boolean
@@ -168,6 +182,8 @@ export type Database = {
           student_name: string
         }
         Insert: {
+          phone_number?: string
+          monthly_rent?: number | null
           sharing_type?: number | null
           has_ac?: boolean
           active?: boolean
@@ -177,6 +193,8 @@ export type Database = {
           student_name: string
         }
         Update: {
+          phone_number?: string
+          monthly_rent?: number | null
           sharing_type?: number | null
           has_ac?: boolean
           active?: boolean

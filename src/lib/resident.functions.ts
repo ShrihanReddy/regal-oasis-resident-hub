@@ -60,7 +60,7 @@ export const submitRentProof = createServerFn({ method: 'POST' }).inputValidator
   const path = `${crypto.randomUUID()}.${data.mime.split('/')[1]}`;
   const upload = await supabaseAdmin.storage.from('rent-proofs').upload(path, bytes, { contentType: data.mime });
   if (upload.error) throw new Error('Screenshot could not be uploaded.');
-  const result = await supabaseAdmin.from('rent_proofs').insert({ allotment_id: data.allotment_id, payment_method: data.payment_method, utr: data.utr, file_path: path }).select('id').single();
+  const result = await supabaseAdmin.from('rent_proofs').insert({ allotment_id: data.allotment_id, billing_month: `${data.billing_month ?? new Date().toISOString().slice(0,7)}-01`, payment_method: data.payment_method, utr: data.utr, file_path: path }).select('id').single();
   if (result.error) { await supabaseAdmin.storage.from('rent-proofs').remove([path]); throw new Error('Rent proof could not be saved.'); } return result.data;
 });
 export const getOwnerSubmissions = createServerFn({ method: 'POST' }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
@@ -82,3 +82,32 @@ export const getProofUrl = createServerFn({ method: 'POST' }).middleware([requir
   const proof = await context.supabase.from('rent_proofs').select('file_path').eq('id', data.id).single(); if (proof.error) throw new Error('Proof not found.');
   const result = await context.supabase.storage.from('rent-proofs').createSignedUrl(proof.data.file_path, 60); if (result.error) throw new Error('Screenshot unavailable.'); return { url: result.data.signedUrl.replace(process.env['SUPABASE_URL'] ?? '', import.meta.env.VITE_SUPABASE_URL) };
 });
+// Archive cleanup is deliberately owner-only and limited to a completed calendar year.
+// Do not use until the owner has downloaded and checked the ZIP containing every proof.
+export const deleteArchivedRentYear = createServerFn({ method: 'POST' })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(input => z.object({ year: z.number().int().min(2020).max(2100), confirmation: z.string() }).parse(input))
+  .handler(async ({ context, data }) => {
+    const access = await context.supabase.rpc('has_role', { _user_id: context.userId, _role: 'owner' });
+    requireOwnerAccess(!access.error && access.data === true);
+    const currentYear = new Date().getUTCFullYear();
+    if (data.year >= currentYear) throw new Error('Only completed years can be cleared.');
+    if (data.confirmation !== `DELETE ${data.year} RENT PROOFS`) throw new Error('Confirmation phrase does not match.');
+    const { supabaseAdmin } = await import('@/integrations/supabase/client.server');
+    const from = `${data.year}-01-01`, to = `${data.year + 1}-01-01`;
+    const { data: proofs, error } = await supabaseAdmin.from('rent_proofs')
+      .select('id,file_path').gte('billing_month', from).lt('billing_month', to);
+    if (error) throw new Error('Could not inspect archived proofs.');
+    // Remove screenshot objects first. If removal fails, leave database records intact.
+    for (let i=0;i<proofs.length;i+=50) {
+      const paths=proofs.slice(i,i+50).map(p=>p.file_path);
+      const removed = await supabaseAdmin.storage.from('rent-proofs').remove(paths);
+      if (removed.error) throw new Error('Storage deletion failed. Some files may have been removed; no database records were deleted.');
+    }
+    const ids=proofs.map(p=>p.id);
+    for (let i=0;i<ids.length;i+=100) {
+      const result=await supabaseAdmin.from('rent_proofs').delete().in('id',ids.slice(i,i+100));
+      if (result.error) throw new Error('Some records could not be removed. Investigate before retrying.');
+    }
+    return { deleted: ids.length };
+  });

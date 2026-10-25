@@ -1,0 +1,21 @@
+-- Feature 5: owner rental ledger, month-based verification and resident contact details.
+-- Run once after 0006, ideally first against a separate test database.
+ALTER TABLE public.student_allotments
+  ADD COLUMN phone_number text NOT NULL DEFAULT '' CHECK (phone_number ~ '^[0-9]{0,15}$'),
+  ADD COLUMN monthly_rent numeric(10,2) CHECK (monthly_rent >= 0);
+ALTER TABLE public.rent_proofs
+  ADD COLUMN billing_month date,
+  ADD COLUMN review_status text NOT NULL DEFAULT 'Pending' CHECK (review_status IN ('Pending','Verified','Rejected')),
+  ADD COLUMN reviewed_at timestamptz,
+  ADD COLUMN reviewed_by uuid;
+-- Legacy proofs: label by submission month instead of fabricating the original paid-for month.
+UPDATE public.rent_proofs SET billing_month = date_trunc('month', created_at)::date WHERE billing_month IS NULL;
+ALTER TABLE public.rent_proofs ALTER COLUMN billing_month SET NOT NULL;
+ALTER TABLE public.rent_proofs ADD CONSTRAINT billing_month_first_day CHECK (extract(day from billing_month) = 1);
+CREATE INDEX rent_proofs_billing_month_idx ON public.rent_proofs (billing_month, allotment_id);
+-- Authenticated verified owners may update proof review status.
+GRANT UPDATE ON public.rent_proofs TO authenticated;
+CREATE POLICY owner_rent_proof_review ON public.rent_proofs FOR UPDATE TO authenticated
+  USING (public.has_role(auth.uid(), 'owner'))
+  WITH CHECK (public.has_role(auth.uid(), 'owner'));
+-- Deletion is restricted to a server-side owner-verified handler, not broad browser access.
