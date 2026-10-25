@@ -310,3 +310,22 @@ h2 { font-size: 23px; font-weight: 450; margin: 0; }
 .homepage-heading-controls h3 { font-size:18px; margin:0 0 8px; }
 .homepage-heading-controls input[type=color] { width:64px; height:36px; cursor:pointer; }
 @media(max-width:600px) { .welcome-hero .hero-custom-title { max-width:92%; font-size:clamp(24px, 9vw, 56px)!important; } }
+
+/* Owner dashboard jump navigation */
+html { scroll-behavior: smooth; }
+.owner-quick-nav { position: sticky; top: 0; z-index: 25; display:flex; flex-wrap:wrap; gap:.55rem; padding: .85rem; background: var(--background, #101820); border:1px solid var(--border, #59636b); border-radius: 14px; margin: 1rem 0 1.5rem; }
+.owner-quick-nav a { color:var(--foreground, #fff); border:1px solid currentColor; border-radius: 999px; padding: .45rem .85rem; font-size:.85rem; text-decoration:none; }
+.owner-quick-nav a:hover, .owner-quick-nav a:focus-visible { background:var(--accent, #a27b43); color:var(--accent-foreground, #fff); }
+.owner-anchor, .owner-section-scope section { scroll-margin-top: 100px; }
+.kitchen-admin { padding:1.5rem; border:1px solid var(--border, #555); border-radius: 18px; margin:2rem 0; }
+.kitchen-admin h2 { font-size: clamp(1.5rem,3vw,2.25rem); margin-bottom:.75rem; }
+.kitchen-admin .kitchen-panels { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr)); gap:1.25rem; }
+.kitchen-admin .kitchen-panel { border:1px solid var(--border,#555); border-radius:12px; padding:1rem; min-width:0; }
+.kitchen-admin input, .kitchen-admin select { width:100%; min-width:0; background:var(--background,#222); color:var(--foreground,#fff); border:1px solid var(--border,#666); border-radius:7px; padding:.6rem; }
+.kitchen-admin label { display:block; margin:.65rem 0 .3rem; }
+.kitchen-admin button { border:1px solid currentColor; padding:.55rem .8rem; border-radius:9px; margin:.35rem .35rem .35rem 0; }
+.kitchen-admin button:disabled { opacity:.4; cursor:not-allowed; }
+.kitchen-admin table { width:100%; font-size:.87rem; border-collapse:collapse; }
+.kitchen-admin td, .kitchen-admin th { padding:.5rem .3rem; border-bottom:1px solid var(--border,#555); text-align:left; }
+.kitchen-admin .kitchen-alert { color:#c27d35; }
+@media(max-width:600px){.owner-quick-nav{flex-wrap:nowrap;overflow-x:auto;top:0}.owner-quick-nav a{flex:none}.kitchen-admin{padding:.8rem}}

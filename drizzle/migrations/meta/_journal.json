@@ -64,6 +64,13 @@
       "when": 1792880005000,
       "tag": "0008_homepage_heading",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1792880006000,
+      "tag": "0009_kitchen_inventory",
+      "breakpoints": true
     }
   ]
 }

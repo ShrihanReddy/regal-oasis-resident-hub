@@ -99,7 +99,7 @@ export function PropertyGallery({ editable = false }: { editable?: boolean }) {
     finally { await qc.invalidateQueries({ queryKey: galleryKey }); setBusy(false); }
   }
   const current = selected === null ? null : photos[selected];
-  return <section id="explore-gallery" className="guest-section property-gallery-section">
+  return <section id={editable ? "gallery-admin" : "explore-gallery"} className="guest-section property-gallery-section">
     <div className="section-heading"><div><p className="small-label">03 / EXPLORE YOUR OASIS</p><h2>{editable ? 'Manage the photo gallery' : 'A glimpse of life at Regal Oasis.'}</h2></div><p>{editable ? 'Upload anytime. Your gallery updates automatically.' : 'Discover the spaces that make this place home.'}</p></div>
     {editable && <div className="gallery-upload"><label className="gallery-upload-label"><ImagePlus size={20} /> {busy ? 'Working…' : 'Add photos'}<input type="file" accept="image/jpeg,image/png,image/webp" multiple disabled={busy} onChange={upload} /></label><span>Upload up to 20 images at once. JPG, PNG or WebP. Optimized automatically.</span></div>}
     {message && <p className="form-message" role="status">{message}</p>}

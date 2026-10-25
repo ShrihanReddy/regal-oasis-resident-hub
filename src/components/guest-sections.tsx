@@ -91,8 +91,8 @@ function WeeklyMenu({ menu, editable }: { menu: Tables<'weekly_mess_menu'>[]; ed
 export function GuestSections({ editable = false }: { editable?: boolean }) {
   const { data } = useSuspenseQuery(guestQueryOptions);
   return <>
-    <section id="accommodation" className="guest-section accommodation-section"><div className="section-heading"><div><p className="small-label">01 / FIND YOUR SPACE</p><h2>{editable ? 'Accommodation tariffs' : 'A room for your next chapter.'}</h2></div><p>Three ways to make yourself at home.</p></div><div className="tariff-grid">{data.rooms.map(room => <RentCard key={room.id} room={room} editable={editable} />)}</div></section>
-    <section id="mess-menu" className="guest-section menu-section"><div className="section-heading"><div><p className="small-label">02 / FRESH FROM THE KITCHEN</p><h2>{editable ? 'Edit the four-week mess menu' : 'Good food. Every day.'}</h2></div><span className="menu-note"><Utensils size={14} />A little taste of home.</span></div>
+    <section id={editable ? "accommodation-admin" : "accommodation"} className="guest-section accommodation-section"><div className="section-heading"><div><p className="small-label">01 / FIND YOUR SPACE</p><h2>{editable ? 'Accommodation tariffs' : 'A room for your next chapter.'}</h2></div><p>Three ways to make yourself at home.</p></div><div className="tariff-grid">{data.rooms.map(room => <RentCard key={room.id} room={room} editable={editable} />)}</div></section>
+    <section id={editable ? "menu-admin" : "mess-menu"} className="guest-section menu-section"><div className="section-heading"><div><p className="small-label">02 / FRESH FROM THE KITCHEN</p><h2>{editable ? 'Edit the four-week mess menu' : 'Good food. Every day.'}</h2></div><span className="menu-note"><Utensils size={14} />A little taste of home.</span></div>
       <WeeklyMenu menu={data.menu} editable={editable}/>
     </section>
     <PropertyGallery editable={editable} />
