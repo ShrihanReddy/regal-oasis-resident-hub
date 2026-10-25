@@ -8,7 +8,7 @@ import { OwnerPanel } from '@/components/owner-panel';
 import { useAuth } from '@/components/auth-context';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { guestQueryOptions } from '@/lib/guest.functions';
-import residence from '@/assets/residence.jpg';
+import { heroImageUrl, useHomepageBackground } from '@/components/homepage-customization';
 
 export const Route = createFileRoute('/')({
   head: () => ({ meta: [
@@ -31,6 +31,7 @@ const viewContent = {
 
 function Index() {
   useSuspenseQuery(guestQueryOptions);
+  const { data: homepage } = useHomepageBackground();
   const { user } = useAuth();
   const [role, setRole] = useState<Role>('guest');
   const [dark, setDark] = useState(true);
@@ -50,7 +51,7 @@ function Index() {
     <main>
       {role === 'owner' ? <OwnerPanel /> : <>
       <section className="welcome-hero" aria-label={role === 'guest' ? 'Welcome to The Regal Oasis' : content.label}>
-        <img className="hero-image" src={residence} alt="Illustrative vision of a leafy residence courtyard" width={1920} height={1024} />
+        <img className="hero-image" src={heroImageUrl(homepage?.storage_path)} style={{ objectPosition: `${homepage?.position_x ?? 50}% ${homepage?.position_y ?? 50}%` }} alt="Illustrative vision of a leafy residence courtyard" width={1920} height={1024} />
         <div className="hero-shade" />
         <div className="hero-inner" key={role}>
           <div className="hero-eyebrow"><span className="eyebrow-line" />{content.eyebrow}</div>

@@ -14,6 +14,12 @@ export type Database = {
   }
   public: {
     Tables: {
+      homepage_settings: {
+        Row: { id: string; storage_path: string | null; position_x: number; position_y: number; updated_at: string }
+        Insert: { id?: string; storage_path?: string | null; position_x?: number; position_y?: number; updated_at?: string }
+        Update: { id?: string; storage_path?: string | null; position_x?: number; position_y?: number; updated_at?: string }
+        Relationships: []
+      }
       property_gallery: {
         Row: { id: string; storage_path: string; caption: string; sort_order: number; created_at: string }
         Insert: { id?: string; storage_path: string; caption?: string; sort_order?: number; created_at?: string }

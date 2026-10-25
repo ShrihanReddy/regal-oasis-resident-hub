@@ -285,3 +285,17 @@ h2 { font-size: 23px; font-weight: 450; margin: 0; }
 .gallery-lightbox-nav button {background:transparent;color:white;border-color:#999;}
 @media(max-width:850px){.property-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}}
 @media(max-width:500px){.property-gallery-grid{grid-template-columns:1fr 1fr;gap:9px;}.gallery-actions button{padding:5px;font-size:10px;}.property-photo-open{aspect-ratio:3/4;}}
+
+/* Owner-managed homepage image */
+.homepage-editor { padding-top: 44px; }
+.homepage-editor-preview { position: relative; height: clamp(230px, 39vw, 425px); overflow: hidden; border-radius: 12px; background: #111; display: flex; align-items: center; padding: 7%; color: white; }
+.homepage-editor-preview img, .homepage-editor-shade { position: absolute; inset: 0; width: 100%; height: 100%; }
+.homepage-editor-preview img { object-fit: cover; }
+.homepage-editor-shade { background: linear-gradient(90deg, rgba(0,0,0,.68),rgba(0,0,0,.15)); }
+.homepage-editor-preview strong { position: relative; z-index: 1; font-size: clamp(24px, 5vw, 56px); font-weight: 500; letter-spacing: -.04em; }
+.homepage-editor-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 20px; }
+.homepage-position-controls { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; margin: 22px 0; }
+.homepage-position-controls label { display: grid; gap: 10px; font-size: 13px; }
+.homepage-position-controls input { width: 100%; accent-color: var(--primary); }
+.homepage-editor-hint { color: var(--muted-foreground); font-size: 12px; }
+@media (max-width: 640px) { .homepage-position-controls { grid-template-columns: 1fr; } }
