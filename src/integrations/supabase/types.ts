@@ -14,18 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      homepage_settings: {
-        Row: { id: string; storage_path: string | null; position_x: number; position_y: number; heading_x: number; heading_y: number; heading_size: number; heading_color: string; updated_at: string }
-        Insert: { id?: string; storage_path?: string | null; position_x?: number; position_y?: number; heading_x?: number; heading_y?: number; heading_size?: number; heading_color?: string; updated_at?: string }
-        Update: { id?: string; storage_path?: string | null; position_x?: number; position_y?: number; heading_x?: number; heading_y?: number; heading_size?: number; heading_color?: string; updated_at?: string }
-        Relationships: []
-      }
-      property_gallery: {
-        Row: { id: string; storage_path: string; caption: string; sort_order: number; created_at: string }
-        Insert: { id?: string; storage_path: string; caption?: string; sort_order?: number; created_at?: string }
-        Update: { id?: string; storage_path?: string; caption?: string; sort_order?: number; created_at?: string }
-        Relationships: []
-      }
       accommodations: {
         Row: {
           id: string
@@ -65,6 +53,42 @@ export type Database = {
         }
         Relationships: []
       }
+      homepage_settings: {
+        Row: {
+          heading_color: string
+          heading_size: number
+          heading_x: number
+          heading_y: number
+          id: string
+          position_x: number
+          position_y: number
+          storage_path: string | null
+          updated_at: string
+        }
+        Insert: {
+          heading_color?: string
+          heading_size?: number
+          heading_x?: number
+          heading_y?: number
+          id: string
+          position_x?: number
+          position_y?: number
+          storage_path?: string | null
+          updated_at?: string
+        }
+        Update: {
+          heading_color?: string
+          heading_size?: number
+          heading_x?: number
+          heading_y?: number
+          id?: string
+          position_x?: number
+          position_y?: number
+          storage_path?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       maintenance_tickets: {
         Row: {
           category: string
@@ -92,12 +116,6 @@ export type Database = {
         }
         Relationships: []
       }
-      weekly_mess_menu: {
-        Row: { id: string; week_number: number; day: string; meal: string; items: string; sort_order: number }
-        Insert: { id: string; week_number: number; day: string; meal: string; items?: string; sort_order: number }
-        Update: { id?: string; week_number?: number; day?: string; meal?: string; items?: string; sort_order?: number }
-        Relationships: []
-      }
       mess_menu: {
         Row: {
           day: string
@@ -122,41 +140,65 @@ export type Database = {
         }
         Relationships: []
       }
+      property_gallery: {
+        Row: {
+          caption: string
+          created_at: string
+          id: string
+          sort_order: number
+          storage_path: string
+        }
+        Insert: {
+          caption?: string
+          created_at?: string
+          id?: string
+          sort_order?: number
+          storage_path: string
+        }
+        Update: {
+          caption?: string
+          created_at?: string
+          id?: string
+          sort_order?: number
+          storage_path?: string
+        }
+        Relationships: []
+      }
       rent_proofs: {
         Row: {
-          billing_month: string
-          review_status: string
-          reviewed_at: string | null
-          reviewed_by: string | null
           allotment_id: string
+          billing_month: string
           created_at: string
           file_path: string
           id: string
           payment_method: string
+          review_status: string
+          reviewed_at: string | null
+          reviewed_by: string | null
           utr: string
         }
         Insert: {
-          billing_month?: string
-          review_status?: string
-          reviewed_at?: string | null
-          reviewed_by?: string | null
           allotment_id: string
+          billing_month: string
           created_at?: string
           file_path: string
           id?: string
           payment_method: string
-          utr?: string
-        }
-        Update: {
-          billing_month?: string
           review_status?: string
           reviewed_at?: string | null
           reviewed_by?: string | null
+          utr?: string
+        }
+        Update: {
           allotment_id?: string
+          billing_month?: string
           created_at?: string
           file_path?: string
           id?: string
           payment_method?: string
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           utr?: string
         }
         Relationships: [
@@ -171,36 +213,36 @@ export type Database = {
       }
       student_allotments: {
         Row: {
-          phone_number: string
-          monthly_rent: number | null
-          sharing_type: number | null
-          has_ac: boolean
           active: boolean
           created_at: string
+          has_ac: boolean
           id: string
+          monthly_rent: number | null
+          phone_number: string
           room_number: string
+          sharing_type: number | null
           student_name: string
         }
         Insert: {
-          phone_number?: string
-          monthly_rent?: number | null
-          sharing_type?: number | null
-          has_ac?: boolean
           active?: boolean
           created_at?: string
+          has_ac?: boolean
           id?: string
+          monthly_rent?: number | null
+          phone_number?: string
           room_number: string
+          sharing_type?: number | null
           student_name: string
         }
         Update: {
-          phone_number?: string
-          monthly_rent?: number | null
-          sharing_type?: number | null
-          has_ac?: boolean
           active?: boolean
           created_at?: string
+          has_ac?: boolean
           id?: string
+          monthly_rent?: number | null
+          phone_number?: string
           room_number?: string
+          sharing_type?: number | null
           student_name?: string
         }
         Relationships: []
@@ -220,6 +262,33 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      weekly_mess_menu: {
+        Row: {
+          day: string
+          id: string
+          items: string
+          meal: string
+          sort_order: number
+          week_number: number
+        }
+        Insert: {
+          day: string
+          id: string
+          items?: string
+          meal: string
+          sort_order: number
+          week_number: number
+        }
+        Update: {
+          day?: string
+          id?: string
+          items?: string
+          meal?: string
+          sort_order?: number
+          week_number?: number
         }
         Relationships: []
       }
