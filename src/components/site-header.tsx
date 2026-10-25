@@ -21,7 +21,7 @@ export function SiteHeader({ role, onRoleChange, dark, onThemeChange }: {
     style={{ width: '36px', height: '36px', objectFit: 'contain' }}
   />
 </span>
-        <span className="brand-copy"><span className="brand-name">THE REGAL OASIS</span><span className="brand-status"><span className="status-dot" />Student Living Management</span></span>
+        <span className="brand-copy"><span className="brand-name">THE REGAL OASIS</span><span className="brand-status"><span className="status-dot" />By Sharath H</span></span>
       </a>
       <nav className="role-switcher" aria-label="Choose your view">
         {roles.map(({ id, label, icon: Icon }) => <Button key={id} variant="ghost" className="role-tab" aria-pressed={role === id} onClick={() => onRoleChange(id)}><Icon size={16} strokeWidth={1.7} /><span>{label}</span></Button>)}
