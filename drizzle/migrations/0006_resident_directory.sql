@@ -1,0 +1,6 @@
+-- Add accommodation details without disturbing existing residents or their rent proofs.
+ALTER TABLE public.student_allotments
+  ADD COLUMN sharing_type integer CHECK (sharing_type IN (2, 3)),
+  ADD COLUMN has_ac boolean NOT NULL DEFAULT false;
+-- Restrict listing and changes to authorized owner accounts using the existing RLS policy.
+-- Deactivation keeps IDs stable for historical records and future monthly rent proofs.

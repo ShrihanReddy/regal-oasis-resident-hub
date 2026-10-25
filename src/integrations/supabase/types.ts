@@ -159,6 +159,8 @@ export type Database = {
       }
       student_allotments: {
         Row: {
+          sharing_type: number | null
+          has_ac: boolean
           active: boolean
           created_at: string
           id: string
@@ -166,6 +168,8 @@ export type Database = {
           student_name: string
         }
         Insert: {
+          sharing_type?: number | null
+          has_ac?: boolean
           active?: boolean
           created_at?: string
           id?: string
@@ -173,6 +177,8 @@ export type Database = {
           student_name: string
         }
         Update: {
+          sharing_type?: number | null
+          has_ac?: boolean
           active?: boolean
           created_at?: string
           id?: string

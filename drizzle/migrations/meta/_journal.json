@@ -43,6 +43,13 @@
       "when": 1792880002000,
       "tag": "0005_homepage_background",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792880003000,
+      "tag": "0006_resident_directory",
+      "breakpoints": true
     }
   ]
 }
