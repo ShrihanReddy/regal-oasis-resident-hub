@@ -80,7 +80,7 @@ export const changeTicketStatus = createServerFn({ method: 'POST' }).middleware(
 export const getProofUrl = createServerFn({ method: 'POST' }).middleware([requireSupabaseAuth]).inputValidator(input => z.object({ id: z.string().uuid() }).parse(input)).handler(async ({ context, data }) => {
   const access = await context.supabase.rpc('has_role', { _user_id: context.userId, _role: 'owner' }); requireOwnerAccess(!access.error && access.data === true);
   const proof = await context.supabase.from('rent_proofs').select('file_path').eq('id', data.id).single(); if (proof.error) throw new Error('Proof not found.');
-  const result = await context.supabase.storage.from('rent-proofs').createSignedUrl(proof.data.file_path, 60); if (result.error) throw new Error('Screenshot unavailable.'); return { url: result.data.signedUrl.replace(process.env['SUPABASE_URL'] ?? '', import.meta.env.VITE_SUPABASE_URL) };
+  const result = await context.supabase.storage.from('rent-proofs').createSignedUrl(proof.data.file_path, 60); if (result.error) throw new Error('Screenshot unavailable.'); return { url: result.data.signedUrl.replace(process.env['SUPABASE_URL'] ?? '', import.meta.env['VITE_SUPABASE_URL']) };
 });
 // Archive cleanup is deliberately owner-only and limited to a completed calendar year.
 // Do not use until the owner has downloaded and checked the ZIP containing every proof.

@@ -1,4 +1,6 @@
 # Features 2–4
+- [x] Inspect and apply the existing kitchen migration, harden stock-history protections, and verify five tables and three inventory functions without frontend changes.
+- [ ] Verify owner kitchen restock/preparation/reversal end-to-end. Blocker: owner test-session permission declined.
 - [x] Store tariffs and meals with public reads and owner-only writes.
 - [x] Build guest highlights, accommodation cards, and day-by-day menu.
 - [x] Add owner sign-in and editing with persisted saves.

@@ -1,26 +1,27 @@
--- Add a four-week rotating menu without deleting the previous menu table.
-CREATE TABLE public.weekly_mess_menu (
-  id text PRIMARY KEY,
-  week_number integer NOT NULL CHECK (week_number BETWEEN 1 AND 4),
-  day text NOT NULL CHECK (day IN ('mon','tue','wed','thu','fri','sat','sun')),
-  meal text NOT NULL CHECK (meal IN ('Breakfast','Lunch','Evening Snacks','Dinner')),
-  items text NOT NULL DEFAULT '' CHECK (length(items) <= 1000),
-  sort_order integer NOT NULL,
-  UNIQUE(week_number, day, meal)
-);
-GRANT SELECT ON public.weekly_mess_menu TO anon, authenticated;
-GRANT UPDATE ON public.weekly_mess_menu TO authenticated;
-GRANT ALL ON public.weekly_mess_menu TO service_role;
-ALTER TABLE public.weekly_mess_menu ENABLE ROW LEVEL SECURITY;
-CREATE POLICY public_weekly_menu ON public.weekly_mess_menu FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY owner_update_weekly_menu ON public.weekly_mess_menu FOR UPDATE TO authenticated
- USING (public.has_role(auth.uid(), 'owner')) WITH CHECK (public.has_role(auth.uid(), 'owner'));
--- All 112 cells are editable by the owner. Copy the existing Mon-Wed meals into Week 1.
-INSERT INTO public.weekly_mess_menu (id, week_number, day, meal, items, sort_order)
-SELECT 'w' || w.week || '-' || d.day || '-' || m.slug, w.week, d.day, m.meal,
-       CASE WHEN w.week = 1 THEN COALESCE(old.items, '') ELSE '' END,
-       m.ord
-FROM generate_series(1,4) AS w(week)
-CROSS JOIN (VALUES ('mon'),('tue'),('wed'),('thu'),('fri'),('sat'),('sun')) AS d(day)
-CROSS JOIN (VALUES ('Breakfast','breakfast',1),('Lunch','lunch',2),('Evening Snacks','snacks',3),('Dinner','dinner',4)) AS m(meal,slug,ord)
-LEFT JOIN public.mess_menu old ON old.day = d.day AND old.meal = m.meal;
+-- The content of this migration cannot be applied: its tables/columns and policies already exist in Lovable Cloud, but its journal entry was not recorded there. Preserve existing objects and records; do not replay.
+-- -- Add a four-week rotating menu without deleting the previous menu table.
+-- CREATE TABLE public.weekly_mess_menu (
+--   id text PRIMARY KEY,
+--   week_number integer NOT NULL CHECK (week_number BETWEEN 1 AND 4),
+--   day text NOT NULL CHECK (day IN ('mon','tue','wed','thu','fri','sat','sun')),
+--   meal text NOT NULL CHECK (meal IN ('Breakfast','Lunch','Evening Snacks','Dinner')),
+--   items text NOT NULL DEFAULT '' CHECK (length(items) <= 1000),
+--   sort_order integer NOT NULL,
+--   UNIQUE(week_number, day, meal)
+-- );
+-- GRANT SELECT ON public.weekly_mess_menu TO anon, authenticated;
+-- GRANT UPDATE ON public.weekly_mess_menu TO authenticated;
+-- GRANT ALL ON public.weekly_mess_menu TO service_role;
+-- ALTER TABLE public.weekly_mess_menu ENABLE ROW LEVEL SECURITY;
+-- CREATE POLICY public_weekly_menu ON public.weekly_mess_menu FOR SELECT TO anon, authenticated USING (true);
+-- CREATE POLICY owner_update_weekly_menu ON public.weekly_mess_menu FOR UPDATE TO authenticated
+--  USING (public.has_role(auth.uid(), 'owner')) WITH CHECK (public.has_role(auth.uid(), 'owner'));
+-- -- All 112 cells are editable by the owner. Copy the existing Mon-Wed meals into Week 1.
+-- INSERT INTO public.weekly_mess_menu (id, week_number, day, meal, items, sort_order)
+-- SELECT 'w' || w.week || '-' || d.day || '-' || m.slug, w.week, d.day, m.meal,
+--        CASE WHEN w.week = 1 THEN COALESCE(old.items, '') ELSE '' END,
+--        m.ord
+-- FROM generate_series(1,4) AS w(week)
+-- CROSS JOIN (VALUES ('mon'),('tue'),('wed'),('thu'),('fri'),('sat'),('sun')) AS d(day)
+-- CROSS JOIN (VALUES ('Breakfast','breakfast',1),('Lunch','lunch',2),('Evening Snacks','snacks',3),('Dinner','dinner',4)) AS m(meal,slug,ord)
+-- LEFT JOIN public.mess_menu old ON old.day = d.day AND old.meal = m.meal;

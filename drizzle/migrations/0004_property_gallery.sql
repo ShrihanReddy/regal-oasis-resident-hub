@@ -1,23 +1,24 @@
--- Dynamic public gallery with verified-owner write permissions.
-CREATE TABLE public.property_gallery (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  storage_path text NOT NULL UNIQUE,
-  caption text NOT NULL DEFAULT '' CHECK (char_length(caption) <= 180),
-  sort_order integer NOT NULL DEFAULT 0,
-  created_at timestamptz NOT NULL DEFAULT now(),
-  CONSTRAINT gallery_safe_path CHECK (storage_path ~ '^[a-zA-Z0-9_-]+\.(jpg|jpeg|png|webp)$')
-);
-ALTER TABLE public.property_gallery ENABLE ROW LEVEL SECURITY;
-GRANT SELECT ON public.property_gallery TO anon, authenticated;
-GRANT INSERT, UPDATE, DELETE ON public.property_gallery TO authenticated;
-CREATE POLICY gallery_public_read ON public.property_gallery FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY gallery_owner_insert ON public.property_gallery FOR INSERT TO authenticated WITH CHECK (public.has_role(auth.uid(),'owner'));
-CREATE POLICY gallery_owner_update ON public.property_gallery FOR UPDATE TO authenticated USING (public.has_role(auth.uid(),'owner')) WITH CHECK (public.has_role(auth.uid(),'owner'));
-CREATE POLICY gallery_owner_delete ON public.property_gallery FOR DELETE TO authenticated USING (public.has_role(auth.uid(),'owner'));
-
-INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-VALUES ('property-gallery', 'property-gallery', true, 6291456, ARRAY['image/jpeg','image/png','image/webp'])
-ON CONFLICT (id) DO UPDATE SET public = true, file_size_limit = 6291456, allowed_mime_types = ARRAY['image/jpeg','image/png','image/webp'];
-CREATE POLICY gallery_storage_public_read ON storage.objects FOR SELECT TO anon, authenticated USING (bucket_id = 'property-gallery');
-CREATE POLICY gallery_storage_owner_insert ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'property-gallery' AND public.has_role(auth.uid(),'owner'));
-CREATE POLICY gallery_storage_owner_delete ON storage.objects FOR DELETE TO authenticated USING (bucket_id = 'property-gallery' AND public.has_role(auth.uid(),'owner'));
+-- The content of this migration cannot be applied: its tables/columns and policies already exist in Lovable Cloud, but its journal entry was not recorded there. Preserve existing objects and records; do not replay.
+-- -- Dynamic public gallery with verified-owner write permissions.
+-- CREATE TABLE public.property_gallery (
+--   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+--   storage_path text NOT NULL UNIQUE,
+--   caption text NOT NULL DEFAULT '' CHECK (char_length(caption) <= 180),
+--   sort_order integer NOT NULL DEFAULT 0,
+--   created_at timestamptz NOT NULL DEFAULT now(),
+--   CONSTRAINT gallery_safe_path CHECK (storage_path ~ '^[a-zA-Z0-9_-]+\.(jpg|jpeg|png|webp)$')
+-- );
+-- ALTER TABLE public.property_gallery ENABLE ROW LEVEL SECURITY;
+-- GRANT SELECT ON public.property_gallery TO anon, authenticated;
+-- GRANT INSERT, UPDATE, DELETE ON public.property_gallery TO authenticated;
+-- CREATE POLICY gallery_public_read ON public.property_gallery FOR SELECT TO anon, authenticated USING (true);
+-- CREATE POLICY gallery_owner_insert ON public.property_gallery FOR INSERT TO authenticated WITH CHECK (public.has_role(auth.uid(),'owner'));
+-- CREATE POLICY gallery_owner_update ON public.property_gallery FOR UPDATE TO authenticated USING (public.has_role(auth.uid(),'owner')) WITH CHECK (public.has_role(auth.uid(),'owner'));
+-- CREATE POLICY gallery_owner_delete ON public.property_gallery FOR DELETE TO authenticated USING (public.has_role(auth.uid(),'owner'));
+-- 
+-- INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+-- VALUES ('property-gallery', 'property-gallery', true, 6291456, ARRAY['image/jpeg','image/png','image/webp'])
+-- ON CONFLICT (id) DO UPDATE SET public = true, file_size_limit = 6291456, allowed_mime_types = ARRAY['image/jpeg','image/png','image/webp'];
+-- CREATE POLICY gallery_storage_public_read ON storage.objects FOR SELECT TO anon, authenticated USING (bucket_id = 'property-gallery');
+-- CREATE POLICY gallery_storage_owner_insert ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'property-gallery' AND public.has_role(auth.uid(),'owner'));
+-- CREATE POLICY gallery_storage_owner_delete ON storage.objects FOR DELETE TO authenticated USING (bucket_id = 'property-gallery' AND public.has_role(auth.uid(),'owner'));
