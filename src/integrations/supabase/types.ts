@@ -15,9 +15,9 @@ export type Database = {
   public: {
     Tables: {
       homepage_settings: {
-        Row: { id: string; storage_path: string | null; position_x: number; position_y: number; updated_at: string }
-        Insert: { id?: string; storage_path?: string | null; position_x?: number; position_y?: number; updated_at?: string }
-        Update: { id?: string; storage_path?: string | null; position_x?: number; position_y?: number; updated_at?: string }
+        Row: { id: string; storage_path: string | null; position_x: number; position_y: number; heading_x: number; heading_y: number; heading_size: number; heading_color: string; updated_at: string }
+        Insert: { id?: string; storage_path?: string | null; position_x?: number; position_y?: number; heading_x?: number; heading_y?: number; heading_size?: number; heading_color?: string; updated_at?: string }
+        Update: { id?: string; storage_path?: string | null; position_x?: number; position_y?: number; heading_x?: number; heading_y?: number; heading_size?: number; heading_color?: string; updated_at?: string }
         Relationships: []
       }
       property_gallery: {

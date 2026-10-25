@@ -8,7 +8,7 @@ import { OwnerPanel } from '@/components/owner-panel';
 import { useAuth } from '@/components/auth-context';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { guestQueryOptions } from '@/lib/guest.functions';
-import { heroImageUrl, useHomepageBackground } from '@/components/homepage-customization';
+import { defaultHeading, heroImageUrl, useHomepageBackground } from '@/components/homepage-customization';
 
 export const Route = createFileRoute('/')({
   head: () => ({ meta: [
@@ -55,7 +55,7 @@ function Index() {
         <div className="hero-shade" />
         <div className="hero-inner" key={role}>
           <div className="hero-eyebrow"><span className="eyebrow-line" />{content.eyebrow}</div>
-          <h1>{content.heading}</h1>
+          {role === 'guest' ? <><h1 className="hero-title-placeholder" aria-hidden="true">{content.heading}</h1><h1 className="hero-custom-title" style={{left:`${homepage?.heading_x ?? defaultHeading.heading_x}%`,top:`${homepage?.heading_y ?? defaultHeading.heading_y}%`,fontSize:`clamp(28px, ${homepage?.heading_size ?? defaultHeading.heading_size}px, 110px)`,color:homepage?.heading_color ?? defaultHeading.heading_color}}>{content.heading}</h1></> : <h1>{content.heading}</h1>}
           <p className="hero-description">{content.description}</p>
           {role === 'guest' && <>
             <div className="hero-highlights"><span><span className="status-dot" />Admissions Open</span><span><Wifi size={15} />High-Speed Fiber</span><span><Utensils size={15} />3 Meals Included</span></div>

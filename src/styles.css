@@ -299,3 +299,14 @@ h2 { font-size: 23px; font-weight: 450; margin: 0; }
 .homepage-position-controls input { width: 100%; accent-color: var(--primary); }
 .homepage-editor-hint { color: var(--muted-foreground); font-size: 12px; }
 @media (max-width: 640px) { .homepage-position-controls { grid-template-columns: 1fr; } }
+
+/* Owner-customizable hero title. Keep placeholder in flow so the other hero content stays stable. */
+.hero-title-placeholder { visibility: hidden; pointer-events: none; }
+.welcome-hero .hero-custom-title { position:absolute; z-index:3; margin:0; line-height:1.08; max-width:min(90%,900px); overflow-wrap:normal; font-weight:500; pointer-events:none; }
+.hero-inner:has(.hero-highlights) .hero-custom-title { font-size:inherit; margin:0; }
+.homepage-editor-preview { padding:0; }
+.homepage-editor-title { position:absolute!important; z-index:2; margin:0; max-width:94%; line-height:1.08; font-weight:500; letter-spacing:-.04em; }
+.homepage-heading-controls { margin:20px 0; padding:18px; border:1px solid var(--border); border-radius:12px; }
+.homepage-heading-controls h3 { font-size:18px; margin:0 0 8px; }
+.homepage-heading-controls input[type=color] { width:64px; height:36px; cursor:pointer; }
+@media(max-width:600px) { .welcome-hero .hero-custom-title { max-width:92%; font-size:clamp(24px, 9vw, 56px)!important; } }
