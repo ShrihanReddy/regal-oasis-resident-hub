@@ -1,23 +1,24 @@
--- One-row configuration for the homepage cover; existing bundled image remains the fallback.
-CREATE TABLE public.homepage_settings (
-  id text PRIMARY KEY CHECK (id = 'homepage'),
-  storage_path text CHECK (storage_path IS NULL OR storage_path ~ '^[a-zA-Z0-9_-]+\.webp$'),
-  position_x integer NOT NULL DEFAULT 50 CHECK (position_x BETWEEN 0 AND 100),
-  position_y integer NOT NULL DEFAULT 50 CHECK (position_y BETWEEN 0 AND 100),
-  updated_at timestamptz NOT NULL DEFAULT now()
-);
-INSERT INTO public.homepage_settings (id) VALUES ('homepage');
-ALTER TABLE public.homepage_settings ENABLE ROW LEVEL SECURITY;
-GRANT SELECT ON public.homepage_settings TO anon, authenticated;
-GRANT UPDATE ON public.homepage_settings TO authenticated;
-CREATE POLICY homepage_settings_read ON public.homepage_settings FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY homepage_settings_owner_update ON public.homepage_settings FOR UPDATE TO authenticated
- USING (public.has_role(auth.uid(), 'owner')) WITH CHECK (public.has_role(auth.uid(), 'owner'));
-
-INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-VALUES ('homepage-backgrounds', 'homepage-backgrounds', true, 6291456, ARRAY['image/webp']);
-CREATE POLICY homepage_background_public_read ON storage.objects FOR SELECT TO anon, authenticated USING (bucket_id = 'homepage-backgrounds');
-CREATE POLICY homepage_background_owner_insert ON storage.objects FOR INSERT TO authenticated
- WITH CHECK (bucket_id = 'homepage-backgrounds' AND public.has_role(auth.uid(), 'owner'));
-CREATE POLICY homepage_background_owner_delete ON storage.objects FOR DELETE TO authenticated
- USING (bucket_id = 'homepage-backgrounds' AND public.has_role(auth.uid(), 'owner'));
+-- The content of this migration cannot be applied: its tables/columns and policies already exist in Lovable Cloud, but its journal entry was not recorded there. Preserve existing objects and records; do not replay.
+-- -- One-row configuration for the homepage cover; existing bundled image remains the fallback.
+-- CREATE TABLE public.homepage_settings (
+--   id text PRIMARY KEY CHECK (id = 'homepage'),
+--   storage_path text CHECK (storage_path IS NULL OR storage_path ~ '^[a-zA-Z0-9_-]+\.webp$'),
+--   position_x integer NOT NULL DEFAULT 50 CHECK (position_x BETWEEN 0 AND 100),
+--   position_y integer NOT NULL DEFAULT 50 CHECK (position_y BETWEEN 0 AND 100),
+--   updated_at timestamptz NOT NULL DEFAULT now()
+-- );
+-- INSERT INTO public.homepage_settings (id) VALUES ('homepage');
+-- ALTER TABLE public.homepage_settings ENABLE ROW LEVEL SECURITY;
+-- GRANT SELECT ON public.homepage_settings TO anon, authenticated;
+-- GRANT UPDATE ON public.homepage_settings TO authenticated;
+-- CREATE POLICY homepage_settings_read ON public.homepage_settings FOR SELECT TO anon, authenticated USING (true);
+-- CREATE POLICY homepage_settings_owner_update ON public.homepage_settings FOR UPDATE TO authenticated
+--  USING (public.has_role(auth.uid(), 'owner')) WITH CHECK (public.has_role(auth.uid(), 'owner'));
+-- 
+-- INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+-- VALUES ('homepage-backgrounds', 'homepage-backgrounds', true, 6291456, ARRAY['image/webp']);
+-- CREATE POLICY homepage_background_public_read ON storage.objects FOR SELECT TO anon, authenticated USING (bucket_id = 'homepage-backgrounds');
+-- CREATE POLICY homepage_background_owner_insert ON storage.objects FOR INSERT TO authenticated
+--  WITH CHECK (bucket_id = 'homepage-backgrounds' AND public.has_role(auth.uid(), 'owner'));
+-- CREATE POLICY homepage_background_owner_delete ON storage.objects FOR DELETE TO authenticated
+--  USING (bucket_id = 'homepage-backgrounds' AND public.has_role(auth.uid(), 'owner'));

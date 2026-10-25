@@ -14,18 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      homepage_settings: {
-        Row: { id: string; storage_path: string | null; position_x: number; position_y: number; heading_x: number; heading_y: number; heading_size: number; heading_color: string; updated_at: string }
-        Insert: { id?: string; storage_path?: string | null; position_x?: number; position_y?: number; heading_x?: number; heading_y?: number; heading_size?: number; heading_color?: string; updated_at?: string }
-        Update: { id?: string; storage_path?: string | null; position_x?: number; position_y?: number; heading_x?: number; heading_y?: number; heading_size?: number; heading_color?: string; updated_at?: string }
-        Relationships: []
-      }
-      property_gallery: {
-        Row: { id: string; storage_path: string; caption: string; sort_order: number; created_at: string }
-        Insert: { id?: string; storage_path: string; caption?: string; sort_order?: number; created_at?: string }
-        Update: { id?: string; storage_path?: string; caption?: string; sort_order?: number; created_at?: string }
-        Relationships: []
-      }
       accommodations: {
         Row: {
           id: string
@@ -65,6 +53,188 @@ export type Database = {
         }
         Relationships: []
       }
+      homepage_settings: {
+        Row: {
+          heading_color: string
+          heading_size: number
+          heading_x: number
+          heading_y: number
+          id: string
+          position_x: number
+          position_y: number
+          storage_path: string | null
+          updated_at: string
+        }
+        Insert: {
+          heading_color?: string
+          heading_size?: number
+          heading_x?: number
+          heading_y?: number
+          id: string
+          position_x?: number
+          position_y?: number
+          storage_path?: string | null
+          updated_at?: string
+        }
+        Update: {
+          heading_color?: string
+          heading_size?: number
+          heading_x?: number
+          heading_y?: number
+          id?: string
+          position_x?: number
+          position_y?: number
+          storage_path?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      kitchen_preparations: {
+        Row: {
+          actor_id: string | null
+          created_at: string
+          id: string
+          prepared_on: string
+          quantity: number
+          recipe_id: string
+          recipe_name: string
+          reversed_at: string | null
+          unit: string
+        }
+        Insert: {
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          prepared_on?: string
+          quantity: number
+          recipe_id: string
+          recipe_name: string
+          reversed_at?: string | null
+          unit: string
+        }
+        Update: {
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          prepared_on?: string
+          quantity?: number
+          recipe_id?: string
+          recipe_name?: string
+          reversed_at?: string | null
+          unit?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kitchen_preparations_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "kitchen_recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kitchen_recipe_ingredients: {
+        Row: {
+          ingredient_id: string
+          quantity: number
+          recipe_id: string
+        }
+        Insert: {
+          ingredient_id: string
+          quantity: number
+          recipe_id: string
+        }
+        Update: {
+          ingredient_id?: string
+          quantity?: number
+          recipe_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kitchen_recipe_ingredients_ingredient_id_fkey"
+            columns: ["ingredient_id"]
+            isOneToOne: false
+            referencedRelation: "pantry_ingredients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kitchen_recipe_ingredients_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "kitchen_recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kitchen_recipes: {
+        Row: {
+          base_yield: number
+          created_at: string
+          id: string
+          name: string
+          yield_unit: string
+        }
+        Insert: {
+          base_yield: number
+          created_at?: string
+          id?: string
+          name: string
+          yield_unit: string
+        }
+        Update: {
+          base_yield?: number
+          created_at?: string
+          id?: string
+          name?: string
+          yield_unit?: string
+        }
+        Relationships: []
+      }
+      kitchen_stock_events: {
+        Row: {
+          actor_id: string | null
+          created_at: string
+          delta: number
+          id: string
+          ingredient_id: string
+          production_id: string | null
+          reason: string
+        }
+        Insert: {
+          actor_id?: string | null
+          created_at?: string
+          delta: number
+          id?: string
+          ingredient_id: string
+          production_id?: string | null
+          reason: string
+        }
+        Update: {
+          actor_id?: string | null
+          created_at?: string
+          delta?: number
+          id?: string
+          ingredient_id?: string
+          production_id?: string | null
+          reason?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kitchen_stock_event_preparation_fk"
+            columns: ["production_id"]
+            isOneToOne: false
+            referencedRelation: "kitchen_preparations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kitchen_stock_events_ingredient_id_fkey"
+            columns: ["ingredient_id"]
+            isOneToOne: false
+            referencedRelation: "pantry_ingredients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       maintenance_tickets: {
         Row: {
           category: string
@@ -92,12 +262,6 @@ export type Database = {
         }
         Relationships: []
       }
-      weekly_mess_menu: {
-        Row: { id: string; week_number: number; day: string; meal: string; items: string; sort_order: number }
-        Insert: { id: string; week_number: number; day: string; meal: string; items?: string; sort_order: number }
-        Update: { id?: string; week_number?: number; day?: string; meal?: string; items?: string; sort_order?: number }
-        Relationships: []
-      }
       mess_menu: {
         Row: {
           day: string
@@ -122,41 +286,92 @@ export type Database = {
         }
         Relationships: []
       }
+      pantry_ingredients: {
+        Row: {
+          created_at: string
+          id: string
+          low_stock: number
+          name: string
+          stock: number
+          unit: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          low_stock?: number
+          name: string
+          stock?: number
+          unit: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          low_stock?: number
+          name?: string
+          stock?: number
+          unit?: string
+        }
+        Relationships: []
+      }
+      property_gallery: {
+        Row: {
+          caption: string
+          created_at: string
+          id: string
+          sort_order: number
+          storage_path: string
+        }
+        Insert: {
+          caption?: string
+          created_at?: string
+          id?: string
+          sort_order?: number
+          storage_path: string
+        }
+        Update: {
+          caption?: string
+          created_at?: string
+          id?: string
+          sort_order?: number
+          storage_path?: string
+        }
+        Relationships: []
+      }
       rent_proofs: {
         Row: {
-          billing_month: string
-          review_status: string
-          reviewed_at: string | null
-          reviewed_by: string | null
           allotment_id: string
+          billing_month: string
           created_at: string
           file_path: string
           id: string
           payment_method: string
+          review_status: string
+          reviewed_at: string | null
+          reviewed_by: string | null
           utr: string
         }
         Insert: {
-          billing_month?: string
-          review_status?: string
-          reviewed_at?: string | null
-          reviewed_by?: string | null
           allotment_id: string
+          billing_month: string
           created_at?: string
           file_path: string
           id?: string
           payment_method: string
-          utr?: string
-        }
-        Update: {
-          billing_month?: string
           review_status?: string
           reviewed_at?: string | null
           reviewed_by?: string | null
+          utr?: string
+        }
+        Update: {
           allotment_id?: string
+          billing_month?: string
           created_at?: string
           file_path?: string
           id?: string
           payment_method?: string
+          review_status?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           utr?: string
         }
         Relationships: [
@@ -171,36 +386,36 @@ export type Database = {
       }
       student_allotments: {
         Row: {
-          phone_number: string
-          monthly_rent: number | null
-          sharing_type: number | null
-          has_ac: boolean
           active: boolean
           created_at: string
+          has_ac: boolean
           id: string
+          monthly_rent: number | null
+          phone_number: string
           room_number: string
+          sharing_type: number | null
           student_name: string
         }
         Insert: {
-          phone_number?: string
-          monthly_rent?: number | null
-          sharing_type?: number | null
-          has_ac?: boolean
           active?: boolean
           created_at?: string
+          has_ac?: boolean
           id?: string
+          monthly_rent?: number | null
+          phone_number?: string
           room_number: string
+          sharing_type?: number | null
           student_name: string
         }
         Update: {
-          phone_number?: string
-          monthly_rent?: number | null
-          sharing_type?: number | null
-          has_ac?: boolean
           active?: boolean
           created_at?: string
+          has_ac?: boolean
           id?: string
+          monthly_rent?: number | null
+          phone_number?: string
           room_number?: string
+          sharing_type?: number | null
           student_name?: string
         }
         Relationships: []
@@ -223,6 +438,33 @@ export type Database = {
         }
         Relationships: []
       }
+      weekly_mess_menu: {
+        Row: {
+          day: string
+          id: string
+          items: string
+          meal: string
+          sort_order: number
+          week_number: number
+        }
+        Insert: {
+          day: string
+          id: string
+          items?: string
+          meal: string
+          sort_order: number
+          week_number: number
+        }
+        Update: {
+          day?: string
+          id?: string
+          items?: string
+          meal?: string
+          sort_order?: number
+          week_number?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -234,6 +476,18 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      kitchen_change_stock: {
+        Args: { p_delta: number; p_ingredient: string; p_reason: string }
+        Returns: undefined
+      }
+      kitchen_prepare: {
+        Args: { p_date?: string; p_quantity: number; p_recipe: string }
+        Returns: string
+      }
+      kitchen_reverse_preparation: {
+        Args: { p_preparation: string }
+        Returns: undefined
       }
     }
     Enums: {
