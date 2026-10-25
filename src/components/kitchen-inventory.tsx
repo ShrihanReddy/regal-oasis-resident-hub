@@ -1,4 +1,4 @@
-import { useState } from 'react';
+  import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -25,11 +25,16 @@ export function KitchenInventory() {
   const [stockId,setStockId]=useState(''); const [stockAmt,setStockAmt]=useState(''); const [stockReason,setStockReason]=useState<'restock'|'adjustment'>('restock');
   const [recipeName,setRecipeName]=useState(''); const [yieldUnit,setYieldUnit]=useState<'kg'|'L'|'pieces'>('kg'); const [baseYield,setBaseYield]=useState('1');
   const [recipeId,setRecipeId]=useState(''); const [partIngredient,setPartIngredient]=useState(''); const [partQty,setPartQty]=useState('');
+  const [partUnit,setPartUnit]=useState<'g'|'kg'|'ml'|'L'|'pieces'>('g');
   const [productionRecipe,setProductionRecipe]=useState(''); const [productionQty,setProductionQty]=useState(''); const [productionDate,setProductionDate]=useState(new Date().toLocaleDateString('en-CA'));
   async function act(work:()=>Promise<void>,success:string){setBusy(true);setMessage('');try{await work(); await queryClient.invalidateQueries({queryKey:key});setMessage(success);}catch(e){setMessage(e instanceof Error?e.message:'Operation failed');}finally{setBusy(false);}}
   if(isPending) return <section className="kitchen-admin"><h2>Kitchen Inventory</h2><p>Loading pantry…</p></section>;
   if(error || !data) return <section className="kitchen-admin"><h2>Kitchen Inventory</h2><p role="alert">{error?.message ?? 'Could not load inventory. Apply migration 0009 first.'}</p><button onClick={()=>queryClient.invalidateQueries({queryKey:key})}>Retry</button></section>;
   const {ingredients,recipes,parts,history}=data;
+  const ingredientForRecipe = ingredients.find(i => i.id === partIngredient);
+  const recipeInputUnit = ingredientForRecipe?.unit === 'g' ? (partUnit === 'kg' ? 'kg' : 'g') : ingredientForRecipe?.unit === 'ml' ? (partUnit === 'L' ? 'L' : 'ml') : 'pieces';
+  const recipeStoredQty = amount(partQty) * (recipeInputUnit === 'kg' || recipeInputUnit === 'L' ? 1000 : 1);
+  const recipeQtyValid = partQty.trim() !== '' && Number.isFinite(recipeStoredQty) && recipeStoredQty > 0;
   const selectedRecipe=recipes.find(r=>r.id===productionRecipe);
   const factor=selectedRecipe&&amount(productionQty)>0 ? amount(productionQty)/Number(selectedRecipe.base_yield) : 0;
   const planned=parts.filter(p=>p.recipe_id===productionRecipe).map(p=>{const i=ingredients.find(v=>v.id===p.ingredient_id);return {name:i?.name??'Unknown',unit:i?.unit??'',needed:Math.round(Number(p.quantity)*factor*1000)/1000,stock:Number(i?.stock??0)};});
@@ -58,12 +63,15 @@ export function KitchenInventory() {
           <label>Prepared dish measured in<select value={yieldUnit} onChange={e=>setYieldUnit(e.target.value as typeof yieldUnit)}><option value="kg">Kilograms (kg)</option><option value="L">Litres (L)</option><option value="pieces">Pieces</option></select></label>
           <label>Base recipe yield<input required type="number" step="0.001" min="0.001" value={baseYield} onChange={e=>setBaseYield(e.target.value)}/></label><button disabled={busy||!recipeName.trim()||amount(baseYield)<=0}>Create recipe</button>
         </form>
-        <form onSubmit={e=>{e.preventDefault();void act(async()=>{const {error}=await db.from('kitchen_recipe_ingredients').upsert({recipe_id:recipeId,ingredient_id:partIngredient,quantity:amount(partQty)},{onConflict:'recipe_id,ingredient_id'});if(error)throw error;setPartQty('');},'Recipe ingredient saved.');}}>
+        <form onSubmit={e=>{e.preventDefault();void act(async()=>{const {error}=await db.from('kitchen_recipe_ingredients').upsert({recipe_id:recipeId,ingredient_id:partIngredient,quantity:recipeStoredQty},{onConflict:'recipe_id,ingredient_id'});if(error)throw error;setPartQty('');},'Recipe ingredient saved.');}}>
           <h4>Set ingredients per base yield</h4>
           <label>Recipe<select required value={recipeId} onChange={e=>setRecipeId(e.target.value)}><option value="">Select recipe</option>{recipes.map(r=><option key={r.id} value={r.id}>{r.name} ({r.base_yield} {r.yield_unit})</option>)}</select></label>
-          <label>Ingredient<select required value={partIngredient} onChange={e=>setPartIngredient(e.target.value)}><option value="">Select ingredient</option>{ingredients.map(i=><option key={i.id} value={i.id}>{i.name} ({i.unit})</option>)}</select></label>
+          <label>Ingredient<select required value={partIngredient} onChange={e=>{const id=e.target.value;setPartIngredient(id);setPartUnit(ingredients.find(i=>i.id===id)?.unit ?? 'g');setPartQty('');}}><option value="">Select ingredient</option>{ingredients.map(i=><option key={i.id} value={i.id}>{i.name} ({i.unit})</option>)}</select></label>
           <label>Quantity<input required type="number" min="0.001" step="0.001" value={partQty} onChange={e=>setPartQty(e.target.value)}/></label>
-          <button disabled={busy||!recipeId||!partIngredient||amount(partQty)<=0}>Save ingredient quantity</button>
+          <label>Unit<select value={recipeInputUnit} onChange={e=>setPartUnit(e.target.value as typeof partUnit)}>
+            {ingredientForRecipe?.unit === 'g' ? <><option value="g">Grams (g)</option><option value="kg">Kilograms (kg)</option></> : ingredientForRecipe?.unit === 'ml' ? <><option value="ml">Millilitres (ml)</option><option value="L">Litres (L)</option></> : <option value="pieces">Pieces</option>}
+          </select></label>
+          <button disabled={busy||!recipeId||!partIngredient||!recipeQtyValid}>Save ingredient quantity</button>
         </form>
         {recipes.map(r=><div key={r.id}><h4>{r.name} — {r.base_yield} {r.yield_unit}</h4><ul>{parts.filter(v=>v.recipe_id===r.id).map(part=><li key={part.ingredient_id}>{ingredients.find(i=>i.id===part.ingredient_id)?.name}: {displayQty(Number(part.quantity),ingredients.find(i=>i.id===part.ingredient_id)?.unit??'')}</li>)}</ul></div>)}
       </div>
