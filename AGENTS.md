@@ -20,3 +20,4 @@
 - Keep maintenance reads public and poll the shared query; resident writes require the server gate, while status changes require verified ownership.
 - Store rent images privately and student allotments separately; expose only active student selection behind the resident gate, with owner-only proof review.
 - Anonymous feedback rows contain only message, random ID, and timestamp; never persist student or session identifiers with feedback.
+- Kitchen stock and immutable history are writable only through owner-checked atomic database functions; retain column-scoped ingredient creation and recipe editing to preserve the existing frontend API.
