@@ -1,4 +1,4 @@
-import { Building2, Compass, Crown, Moon, ShieldCheck, Sun } from 'lucide-react';
+import { Building2, Compass, Moon, ShieldCheck, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export const roles = [
@@ -14,7 +14,13 @@ export function SiteHeader({ role, onRoleChange, dark, onThemeChange }: {
   return <header className="site-header">
     <div className="header-inner">
       <a className="brand" href="/" aria-label="The Regal Oasis home">
-        <span className="brand-mark"><Crown size={25} strokeWidth={1.5} /></span>
+       <span className="brand-mark">
+  <img
+    src="/pg-logo.png"
+    alt="The Regal Oasis logo"
+    style={{ width: '36px', height: '36px', objectFit: 'contain' }}
+  />
+</span>
         <span className="brand-copy"><span className="brand-name">THE REGAL OASIS</span><span className="brand-status"><span className="status-dot" />Student Living Management</span></span>
       </a>
       <nav className="role-switcher" aria-label="Choose your view">
