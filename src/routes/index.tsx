@@ -5,6 +5,7 @@ import { SiteHeader, type Role } from '@/components/site-header';
 import { Button } from '@/components/ui/button';
 import { GuestSections } from '@/components/guest-sections';
 import { OwnerPanel } from '@/components/owner-panel';
+import { ResidentPortal } from '@/components/resident-portal';
 import { useAuth } from '@/components/auth-context';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { guestQueryOptions } from '@/lib/guest.functions';
@@ -66,10 +67,10 @@ function Index() {
         <div className="hero-bottom"><span><span className="mini-dot" /> STUDENT LIVING, REIMAGINED</span><span className="photo-note">A vision of your oasis</span><a href={role === 'guest' ? '#accommodation' : '#welcome'} className="scroll-link" aria-label="Scroll to welcome"><ArrowDown size={18} /></a></div>
         <span className="hero-side-label">LIVE WELL. BELONG HERE.</span>
       </section>
-      {role === 'guest' ? <GuestSections /> : <section id="welcome" className="welcome-strip" aria-live="polite">
+      {role === 'guest' ? <GuestSections /> : <><section id="welcome" className="welcome-strip" aria-live="polite">
         <div className="welcome-strip-title"><span className="section-index">01 /</span><div><p className="small-label">THE REGAL WAY</p><h2>{content.label}</h2></div></div>
         <div className="welcome-strip-copy"><p>{content.subline}</p><ArrowUpRight size={24} strokeWidth={1.2} aria-hidden="true" /></div>
-      </section>}
+      </section><ResidentPortal /></>}
       </>}
     </main>
     <footer className="site-footer"><span><Crown size={14} /> THE REGAL OASIS</span><span>A little more than home.</span></footer>
