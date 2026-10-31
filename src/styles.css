@@ -1997,6 +1997,7 @@ html { scroll-behavior: smooth; }
   font-weight: 600;
   line-height: 1.35;
   white-space: nowrap;
+  margin-left: 18px;
 }
 
 @media (max-width: 1000px) {
