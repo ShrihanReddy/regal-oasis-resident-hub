@@ -42,6 +42,9 @@ function WeeklyMenu({ menu, editable }: { menu: Tables<'weekly_mess_menu'>[]; ed
   const save = useServerFn(updateMeal);
   const queryClient = useQueryClient();
   const weeklyMeals = mealsForWeek(menu, week);
+const visibleMeals = mealNames.filter(
+  name => name.toLowerCase().trim() !== 'snacks'
+);
   async function submit(e: FormEvent, id: string) {
     e.preventDefault(); setBusy(true); setMessage('');
     try {
@@ -67,9 +70,9 @@ function WeeklyMenu({ menu, editable }: { menu: Tables<'weekly_mess_menu'>[]; ed
     </div>
     <div className="weekly-menu-scroll" id="weekly-menu-panel" role="tabpanel" aria-labelledby={`week-tab-${week}`}>
       <table className="weekly-menu-table">
-        <thead><tr><th scope="col">Day</th>{mealNames.map(name => <th key={name} scope="col">{name}</th>)}</tr></thead>
+        <thead><tr><th scope="col">Day</th>{visibleMeals.map(name => <th key={name} scope="col">{name}</th>)}</tr></thead>
         <tbody>{fullDays.map(day => <tr key={day.id}><th scope="row">{day.label}</th>
-          {mealNames.map(name => {
+          {visibleMeals.map(name => {
             const meal = weeklyMeals.find(item => item.day === day.id && item.meal === name);
             if (!meal) return <td key={name}>—</td>;
             return <td key={name}>
