@@ -43,7 +43,7 @@ function WeeklyMenu({ menu, editable }: { menu: Tables<'weekly_mess_menu'>[]; ed
   const queryClient = useQueryClient();
   const weeklyMeals = mealsForWeek(menu, week);
 const visibleMeals = mealNames.filter(
-  name => name.toLowerCase().trim() !== 'snacks'
+  name => !name.toLowerCase().includes('snack')
 );
   async function submit(e: FormEvent, id: string) {
     e.preventDefault(); setBusy(true); setMessage('');
