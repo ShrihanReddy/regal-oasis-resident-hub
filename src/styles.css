@@ -997,3 +997,48 @@ html { scroll-behavior: smooth; }
   .welcome-hero .hero-custom-title { font-size: clamp(24px, 8vw, 44px) !important; }
   .welcome-hero .hero-brand-byline { font-size: 10px; }
 }
+
+/* Final homepage identity alignment — no changes to owner or resident views. */
+.welcome-hero .hero-brand-heading {
+  align-items: center;
+  gap: clamp(14px, 2vw, 30px);
+  max-width: min(94%, 1000px);
+}
+.welcome-hero .hero-brand-logo {
+  width: clamp(105px, 10vw, 160px);
+  height: clamp(105px, 10vw, 160px);
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+.welcome-hero .hero-brand-copy {
+  min-width: 0;
+}
+.welcome-hero .hero-brand-heading-line {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+}
+.welcome-hero .hero-brand-byline {
+  display: block;
+  align-self: flex-start;
+  color: #e6c400;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: clamp(12px, 1.05vw, 16px);
+  letter-spacing: .025em;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .welcome-hero .hero-brand-heading {
+    gap: 10px;
+    max-width: 93%;
+  }
+  .welcome-hero .hero-brand-logo {
+    width: clamp(62px, 16vw, 88px);
+    height: clamp(62px, 16vw, 88px);
+  }
+  .welcome-hero .hero-brand-heading-line { gap: 5px; }
+  .welcome-hero .hero-brand-byline { font-size: 11px; }
+}
