@@ -2041,3 +2041,39 @@ html { scroll-behavior: smooth; }
     font-size: 11px;
   }
 }
+
+/* Vercel production homepage branding correction */
+
+.welcome-hero .hero-brand-heading {
+  margin-left: 0 !important;
+  transform: none;
+  grid-template-columns: clamp(95px, 9vw, 140px) minmax(0, 1fr);
+  column-gap: clamp(14px, 1.5vw, 24px);
+  max-width: calc(100vw - 32px);
+}
+
+.welcome-hero .hero-brand-logo {
+  width: 100%;
+  max-height: 150px;
+  object-fit: contain;
+}
+
+.welcome-hero .hero-custom-title,
+.hero-inner:has(.hero-highlights) .hero-custom-title {
+  font-family: 'Manrope', sans-serif !important;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.08;
+}
+
+@media (max-width: 600px) {
+  .welcome-hero .hero-brand-heading {
+    grid-template-columns: 55px minmax(0, 1fr);
+    column-gap: 9px;
+  }
+
+  .welcome-hero .hero-custom-title {
+    font-size: clamp(24px, 7vw, 42px) !important;
+  }
+}
+
