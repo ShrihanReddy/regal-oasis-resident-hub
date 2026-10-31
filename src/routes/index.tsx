@@ -25,7 +25,7 @@ export const Route = createFileRoute('/')({
 });
 
 const viewContent = {
-  guest: { eyebrow: 'A NEW CHAPTER STARTS HERE', heading: <>THE REGAL<br />OASIS<span className="heading-dot">.</span></>, description: 'Your space. Your community. Your oasis.', label: 'Welcome to your next chapter', subline: 'A place to settle in. A place to belong.' },
+  guest: { eyebrow: 'A NEW CHAPTER STARTS HERE',heading: <>THE REGAL<br />OASIS</>, description: 'Your space. Your community. Your oasis.', label: 'Welcome to your next chapter', subline: 'A place to settle in. A place to belong.' },
   resident: { eyebrow: 'YOUR EVERYDAY, A LITTLE BETTER', heading: <>WELCOME<br />HOME<span className="heading-dot">.</span></>, description: 'Your space. Your people. Your everyday.', label: 'Resident Portal', subline: 'Your own corner of The Regal Oasis.' },
   owner: { eyebrow: 'A THOUGHTFUL PLACE, THOUGHTFULLY MANAGED', heading: <>THE BIG<br />PICTURE<span className="heading-dot">.</span></>, description: 'A better place to live starts with you.', label: 'Owner Admin', subline: 'The Regal Oasis, from your point of view.' },
 };
@@ -57,14 +57,7 @@ function Index() {
         <div className="hero-inner" key={role}>
           <div className="hero-eyebrow"><span className="eyebrow-line" />{content.eyebrow}</div>
           {role === 'guest' ? <>
-            <h1 className="hero-title-placeholder" aria-hidden="true">{content.heading}</h1>
-            <div
-              className="hero-brand-heading"
-              style={{
-                left: `${homepage?.heading_x ?? defaultHeading.heading_x}%`,
-                top: `${homepage?.heading_y ?? defaultHeading.heading_y}%`,
-              }}
-            >
+            <div className="hero-brand-heading">
               <img className="hero-brand-logo" src="/pg-logo.png" alt="The Regal Oasis logo" />
               <div className="hero-brand-copy">
                 <h1
